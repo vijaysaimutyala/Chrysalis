@@ -12,6 +12,9 @@
     <string name="signout">Sign Out</string>
     <string name="currentWork">Specify your current area of work</string>
     <string name="personalProject">Specify any personal projects/learnings in the chosen area of interset</string>
+    <string name="recentActivity">Recent Activity</string>
+    <string name="updateActivity">Update Activity</string>
+    <string name="redeem">Redeem Points</string>
     <string-array name="interestGroups">
         <item>AI &amp; ML</item>
         <item>Mobility</item>

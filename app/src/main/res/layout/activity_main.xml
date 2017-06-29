@@ -5,27 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:layout_margin="10dp"
+    android:layout_weight="3">
 
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/userdataLayout">
     <ImageView
         android:id="@+id/profilePic"
         android:layout_width="109dp"
         android:layout_height="113dp"
-        app:srcCompat="@drawable/vijay"
+        app:srcCompat="@drawable/cast_album_art_placeholder_large"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginEnd="12dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-
-        android:textSize="20sp"
-        android:layout_toEndOf="@+id/profilePic" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/chrysLevel"
@@ -33,15 +38,13 @@
         android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="15sp"
-        android:layout_below="@id/profileName"
-        android:layout_toEndOf="@id/profilePic"/>
+        android:layout_below="@id/profileName" />
 
     <TextView
         android:id="@+id/chrysGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:layout_toEndOf="@id/profilePic"
         android:layout_below="@id/chrysLevel"/>
 
     <TextView
@@ -49,10 +52,52 @@
         android:layout_width="wrap_content"
         android:layout_height="17dp"
         android:text="TextView"
-        android:layout_marginLeft="17dp"
         android:textSize="15sp"
-        android:layout_alignBaseline="@+id/profileName"
-        android:layout_alignBottom="@+id/profileName"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@id/chrysGroup"/>
+</RelativeLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="330dp"
+    android:layout_below="@+id/userdataLayout"
+    android:id="@+id/recentActivityLayout"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/recentActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recentActivity" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/recentActivity" />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/buttonLinearLayout"
+        android:layout_below="@id/recentActivityLayout"
+        android:weightSum="2"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/updateActivity"
+            android:text="@string/updateActivity"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/redeemPoints"
+            android:text="@string/redeem"
+            android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"/>
+    </LinearLayout>
+
+
 
 </RelativeLayout>
