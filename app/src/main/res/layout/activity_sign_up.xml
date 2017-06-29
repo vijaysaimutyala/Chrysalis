@@ -47,11 +47,12 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/areaOfCurrentWork"
         android:hint="@string/currentWork"
+        android:background="@drawable/border_text_view"
         android:layout_below="@id/interestGroup"
-        android:background="@drawable/border_text_view"/>
+        android:layout_alignParentStart="true"
+        android:gravity="top"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="75dp"
@@ -59,7 +60,8 @@
         android:id="@+id/personalProject"
         android:hint="@string/personalProject"
         android:layout_below="@id/areaOfCurrentWork"
-        android:background="@drawable/border_text_view"/>
+        android:background="@drawable/border_text_view"
+        android:gravity="top"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

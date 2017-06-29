@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,8 +32,9 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "Sign Up";
-    EditText email,pwd,cnfpwd,username;
+    EditText email,pwd,cnfpwd,username,areaOfCurrentWork,personalProject;
     Button signUp;
+    Spinner chrysalisGroup;
     ProgressDialog progressDialog;
     RelativeLayout relativeLayout;
     private FirebaseAuth mAuth;
@@ -69,6 +71,10 @@ public class SignUpActivity extends AppCompatActivity {
         cnfpwd = (EditText)findViewById(R.id.edt_signup_confirm_password);
         signUp = (Button)findViewById(R.id.btn_signup_signup);
         username = (EditText)findViewById(R.id.signup_username);
+        chrysalisGroup = (Spinner)findViewById(R.id.interestGroup);
+        areaOfCurrentWork = (EditText)findViewById(R.id.areaOfCurrentWork);
+        personalProject = (EditText)findViewById(R.id.personalProject);
+
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +111,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }else {
                             String emailid = email.getText().toString();
-                            saveUserDataToFirebase(emailid);
+                            String uid = mAuth.getCurrentUser().getUid().toString();
+                            saveUserDataToFirebase(emailid,uid);
                         }
                         progressDialog.hide();
 
@@ -115,11 +122,17 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveUserDataToFirebase(String emailid) {
+    private void saveUserDataToFirebase(String emailid, String uid) {
         // Read from the database
         String name = username.getText().toString();
-        String key = userRef.push().getKey();
-        User newUser = new User(emailid,name,0, "Artificial Intelligence","Beginner");
+        String group = chrysalisGroup.getSelectedItem().toString();
+        String key = uid;
+        int points = 0;
+        String chrysalisLevel = "Beginner";
+        String currentWork = areaOfCurrentWork.getText().toString();
+        String personalProjects = personalProject.getText().toString();
+        Boolean admin = false;
+        User newUser = new User(emailid,name,points, group,chrysalisLevel,currentWork,personalProjects,admin,key);
         Map<String,Object> addUser = newUser.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 

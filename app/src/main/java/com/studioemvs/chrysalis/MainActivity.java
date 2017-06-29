@@ -1,5 +1,6 @@
 package com.studioemvs.chrysalis;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,19 +9,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
     String TAG ="Main Activity";
-
+    String userKey,username,chrysLevel,chrysGroup;
+    int chrysPoints;
+    Query userDataQuery;
+    TextView name,level,points,group;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
+        name = (TextView)findViewById(R.id.profileName);
+        level = (TextView)findViewById(R.id.chrysLevel);
+        group = (TextView)findViewById(R.id.chrysGroup);
+        points = (TextView)findViewById(R.id.chrysPoints);
+        progressDialog = new ProgressDialog(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -37,6 +55,35 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Toast.makeText(MainActivity.this, "User" +user.getEmail()+"is logged in!", Toast.LENGTH_SHORT).show();
+                    userKey = user.getUid();
+                    Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
+                    progressDialog.setMessage("Fetching user data");
+                    progressDialog.show();
+                    userRef.orderByChild("uid").equalTo(userKey).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User userProfile = new User();
+
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                User userdata = userSnapshot.getValue(User.class);
+                                username = userdata.getUsername();
+                                chrysLevel = userdata.getChrysalisLevel();
+                                chrysGroup = userdata.getChrysalisGroup();
+                                chrysPoints = userdata.getChrysalisPoints();
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                    name.setText(username);
+                    level.setText(chrysLevel);
+//      points.setText(chrysPoints);
+                    group.setText(chrysGroup);
+                    progressDialog.hide();
                 } else {
                     // User is signed out
                     Intent intent = new Intent(MainActivity.this,LoginActivity.class);
@@ -44,10 +91,39 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
     }
+
+    private void getUserData(final String userkey) {
+        Log.d(TAG, "getUserData: "+userkey);
+        userRef.orderByChild("uid").equalTo(userkey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User userProfile = new User();
+
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    User userdata = userSnapshot.getValue(User.class);
+                    username = userdata.getUsername();
+                    chrysLevel = userdata.getChrysalisLevel();
+                    chrysGroup = userdata.getChrysalisGroup();
+                    chrysPoints = userdata.getChrysalisPoints();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        name.setText(username);
+        level.setText(chrysLevel);
+//      points.setText(chrysPoints);
+        group.setText(chrysGroup);
+        progressDialog.hide();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

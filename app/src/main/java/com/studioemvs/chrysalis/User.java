@@ -15,17 +15,40 @@ public class User {
     int chrysalisPoints;
     String chrysalisGroup;
     String chrysalisLevel;
+    String currentWork;
+    String personalProjects;
+    Boolean admin;
+    String uid;
 
     public User() {
     }
 
+    public String getCurrentWork() {
+        return currentWork;
+    }
 
-    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel) {
+    public String getPersonalProjects() {
+        return personalProjects;
+    }
+
+    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String currentWork, String personalProjects, Boolean admin, String uid) {
         this.emailid = emailid;
         this.username = username;
         this.chrysalisPoints = chrysalisPoints;
         this.chrysalisGroup = chrysalisGroup;
         this.chrysalisLevel = chrysalisLevel;
+        this.currentWork = currentWork;
+        this.personalProjects = personalProjects;
+        this.admin = admin;
+        this.uid = uid;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getEmailid() {
@@ -55,6 +78,10 @@ public class User {
         result.put("chrysalisPoints",chrysalisPoints);
         result.put("chrysalisGroup",chrysalisGroup);
         result.put("chrysalisLevel",chrysalisLevel);
+        result.put("currentWork",currentWork);
+        result.put("personalProjects",personalProjects);
+        result.put("admin",admin);
+        result.put("uid",uid);
         return result;
     }
 }
