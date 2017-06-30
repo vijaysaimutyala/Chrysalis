@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".UpdateProgressActivity"></activity>
+        <activity android:name=".UpdateProgressActivity" />
+        <activity android:name=".RedeemPointsActivity"></activity>
     </application>
 
 </manifest>

@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     Query userDataQuery;
     TextView name,level,points,group;
     ProgressDialog progressDialog;
+    Button updateActivity,redeemPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,11 @@ public class MainActivity extends AppCompatActivity {
         level = (TextView)findViewById(R.id.chrysLevel);
         group = (TextView)findViewById(R.id.chrysGroup);
         points = (TextView)findViewById(R.id.chrysPoints);
+        updateActivity = (Button)findViewById(R.id.updateActivity);
+        redeemPoints = (Button)findViewById(R.id.redeemPoints);
         progressDialog = new ProgressDialog(this);
+        updateActivity.setOnClickListener(this);
+        redeemPoints.setOnClickListener(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -157,6 +164,22 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.updateActivity:
+                Intent updateAct = new Intent(this,UpdateProgressActivity.class);
+                startActivity(updateAct);
+                finish();
+                break;
+            case R.id.redeemPoints:
+                Intent redeemAct = new Intent(this, RedeemPointsActivity.class);
+                startActivity(redeemAct);
+                finish();
+                break;
         }
     }
 }

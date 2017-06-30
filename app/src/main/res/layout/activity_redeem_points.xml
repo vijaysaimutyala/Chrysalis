@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.studioemvs.chrysalis.UpdateProgressActivity">
+    tools:context="com.studioemvs.chrysalis.RedeemPointsActivity">
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="You can upgrade your progress here to advance Chrysalis levels."
+        android:layout_width="0dp"
+        android:layout_height="495dp"
+        android:text="You can redeem your points for goodies/grade upgrades"
         android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
