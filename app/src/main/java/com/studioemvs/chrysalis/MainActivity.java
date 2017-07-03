@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     userRef.orderByChild("uid").equalTo(userKey).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            User userProfile = new User();
-
                             for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                                 User userdata = userSnapshot.getValue(User.class);
                                 username = userdata.getUsername();
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 chrysGroup = userdata.getChrysalisGroup();
                                 chrysPoints = userdata.getChrysalisPoints();
                             }
-
                         }
 
                         @Override
@@ -171,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.updateActivity:
-                Intent updateAct = new Intent(this,UpdateProgressActivity.class);
+                Intent updateAct = new Intent(this,ProgressUpdateActivity.class);
                 startActivity(updateAct);
                 finish();
                 break;

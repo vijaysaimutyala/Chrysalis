@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".UpdateProgressActivity" />
-        <activity android:name=".RedeemPointsActivity"></activity>
+        <activity android:name=".RedeemPointsActivity" />
+        <activity android:name=".ProgressUpdateActivity"></activity>
     </application>
 
 </manifest>

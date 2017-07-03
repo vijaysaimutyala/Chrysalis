@@ -1,6 +1,7 @@
 package com.studioemvs.chrysalis;
 
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +9,8 @@ import java.util.Map;
 /**
  * Created by vijsu on 24-06-2017.
  */
-
-public class User {
+@IgnoreExtraProperties
+public  class User {
     String emailid;
     String username;
     int chrysalisPoints;
@@ -19,6 +20,20 @@ public class User {
     String personalProjects;
     Boolean admin;
     String uid;
+
+    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel,
+                String currentWork, String personalProjects, Boolean admin, String uid) {
+        this.emailid = emailid;
+        this.username = username;
+        this.chrysalisPoints = chrysalisPoints;
+        this.chrysalisGroup = chrysalisGroup;
+        this.chrysalisLevel = chrysalisLevel;
+        this.currentWork = currentWork;
+        this.personalProjects = personalProjects;
+        this.admin = admin;
+        this.uid = uid;
+    }
+
 
     public User() {
     }
@@ -31,17 +46,7 @@ public class User {
         return personalProjects;
     }
 
-    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String currentWork, String personalProjects, Boolean admin, String uid) {
-        this.emailid = emailid;
-        this.username = username;
-        this.chrysalisPoints = chrysalisPoints;
-        this.chrysalisGroup = chrysalisGroup;
-        this.chrysalisLevel = chrysalisLevel;
-        this.currentWork = currentWork;
-        this.personalProjects = personalProjects;
-        this.admin = admin;
-        this.uid = uid;
-    }
+
 
     public Boolean getAdmin() {
         return admin;
@@ -84,4 +89,5 @@ public class User {
         result.put("uid",uid);
         return result;
     }
+
 }

@@ -37,8 +37,9 @@
         <item>Built POC</item>
         <item>Deployed real life solutions</item>
         <item>Participated in 3 consecutive meetings</item>
-        <item>Participated in 3 consecutive meetings</item>
-        <item>Participated in 3 consecutive meetings</item>
+        <item>Participated in 5 consecutive meetings</item>
+        <item>Participated in 10 consecutive meetings</item>
+        <item>Participated in 15 consecutive meetings</item>
     </string-array>
     <string name="activityPoints">
         {"Participated in 1 meeting":50,
