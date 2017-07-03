@@ -14,16 +14,18 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 
-public class UpdateProgressActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     Spinner activity;
     Button submit;
     TextView points;
     HashMap<String,Integer> pointsMap;
+    int[] activityPoints = {50,100,100,200,200,500,500,500,500,1000,1000,1000,2500,100,150,250,500};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_progress);
+        setContentView(R.layout.activity_main);
         activity = (Spinner)findViewById(R.id.activitySpinner);
         submit = (Button)findViewById(R.id.submitActivity);
         points = (TextView)findViewById(R.id.pointsForActivity);
@@ -32,19 +34,16 @@ public class UpdateProgressActivity extends AppCompatActivity implements Adapter
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         activity.setAdapter(adapter);
         activity.setOnItemSelectedListener(this);
-
     }
-
     @Override
     protected void onStart() {
         super.onStart();
-        pointsMap = new Gson().fromJson(getString(R.string.activityPoints), new TypeToken<HashMap<String, String>>(){}.getType());
 
     }
-
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+        String actPoints = String.valueOf(activityPoints[i]);
+        points.setText(actPoints);
     }
 
     @Override
