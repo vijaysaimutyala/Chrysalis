@@ -15,10 +15,49 @@
     <string name="recentActivity">Recent Activity</string>
     <string name="updateActivity">Update Activity</string>
     <string name="redeem">Redeem Points</string>
+    <string name="submit">Submit</string>
     <string-array name="interestGroups">
         <item>AI &amp; ML</item>
         <item>Mobility</item>
         <item>IOT</item>
         <item>Robotics</item>
     </string-array>
+    <string-array name="activities">
+        <item>Participated in 1 meeting</item>
+        <item>Conducted Training Session</item>
+        <item>Attended Speaker session</item>
+        <item>Attended ETA Training</item>
+        <item>Complete Accelerate Job</item>
+        <item>Conducted Training</item>
+        <item>Delivered Speaker session</item>
+        <item>Built reusable code/libraries</item>
+        <item>Participated in an event</item>
+        <item>Conducted events</item>
+        <item>Admin contribution</item>
+        <item>Built POC</item>
+        <item>Deployed real life solutions</item>
+        <item>Participated in 3 consecutive meetings</item>
+        <item>Participated in 3 consecutive meetings</item>
+        <item>Participated in 3 consecutive meetings</item>
+    </string-array>
+    <string name="activityPoints">
+        {"Participated in 1 meeting":50,
+"Conducted Training Session":100,
+"Attended Speaker session":100,
+"Attended ETA Training":200,
+"Complete Accelerate Job":200,
+"Conducted Training":500,
+"Delivered Speaker session":500,
+"Built reusable code/libraries":500,
+"Participated in an event":500,
+"Conducted events":1000,
+"Admin contribution":1000,
+"Built POC":1000,
+"Deployed real life solutions":2500,
+"Participated in 3 consecutive meetings":100,
+"Participated in 5 consecutive meetings":150,
+"Participated in 10 consecutive meetings":250,
+"Participated in 10 consecutive meetings":500}
+    </string>
+
 </resources>
