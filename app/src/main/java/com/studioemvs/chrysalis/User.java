@@ -96,6 +96,8 @@ public  class User {
     public String getChrysalisLevel() {
         return chrysalisLevel;
     }
+
+
     @Exclude
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
@@ -108,6 +110,9 @@ public  class User {
         result.put("personalProjects",personalProjects);
         result.put("admin",admin);
         result.put("uid",uid);
+        result.put("id",recentActivity.id);
+        result.put("activity",recentActivity.activity);
+        result.put("points",recentActivity.points);
         return result;
     }
     @IgnoreExtraProperties

@@ -1,6 +1,8 @@
 package com.studioemvs.chrysalis;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +24,7 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Transaction;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -35,13 +38,15 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     String userKey,activityCompleted;
-    int pointsForActivity;
+    int pointsForActivity,prevPoints;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_update);
+        Bundle bundle = getIntent().getExtras();
+        prevPoints = bundle.getInt("points");
         userRef = FirebaseDatabase.getInstance().getReference().child("users");
         mAuth = FirebaseAuth.getInstance();
         activity = (Spinner)findViewById(R.id.activitySpinner);
@@ -75,13 +80,8 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 FirebaseUser user =  mAuth.getCurrentUser();
                 if (user!=null){
                     userKey = user.getUid();
+                    updatePoints(pointsForActivity);
                     submitActivityToAdmin(pointsForActivity,activityCompleted);
-                    try {
-                        Thread.sleep(2000);
-                        updatePoints(pointsForActivity);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
@@ -91,29 +91,36 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
 
     private void updatePoints(final int pointsForActivity) {
         //add points to already existing ones
-        userRef.child(userKey).runTransaction(new Transaction.Handler() {
+        userRef.child(userKey).child("chrysalisPoints").setValue(pointsForActivity+prevPoints);
+        prevPoints = pointsForActivity+prevPoints;
+/*        userRef.child(userKey).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 User user = mutableData.getValue(User.class);
+                User.RecentActivity recentActivity = new User.RecentActivity("recentss",activityCompleted,pointsForActivity);
                 if (user ==null){
                     return Transaction.success(mutableData);
                 }
                 user.chrysalisPoints = user.chrysalisPoints+pointsForActivity;
+                user.recentActivity = recentActivity;
+
                 mutableData.setValue(user);
                 return Transaction.success(mutableData);
             }
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                 Log.d("point update", "postTransaction:onComplete:" + databaseError);
+
             }
-        });
+        });*/
     }
 
 
     private void submitActivityToAdmin(final int points, String activity) {
         DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
         String key = recRef.push().getKey();
-        User.RecentActivity recentActivity = new User.RecentActivity("recentss",activity,points);
+        String id = String.valueOf(Calendar.getInstance().getTimeInMillis());
+        User.RecentActivity recentActivity = new User.RecentActivity(id,activity,points);
         Map<String,Object> recActivity = recentActivity.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(userKey+"/"+"recentActivity/"+key, recActivity);

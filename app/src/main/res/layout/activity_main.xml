@@ -88,7 +88,7 @@
             android:id="@+id/updateActivity"
             android:text="@string/updateActivity"
             android:layout_weight="1"
-            style="?android:attr/buttonBarButtonStyle"/>
+            style="?android:attr/buttonBarButtonStyle" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"

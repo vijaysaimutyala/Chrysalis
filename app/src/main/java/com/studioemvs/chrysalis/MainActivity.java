@@ -167,12 +167,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.updateActivity:
+                Bundle bundle = new Bundle();
+                bundle.putInt("points", Integer.parseInt(chrysPoints));
                 Intent updateAct = new Intent(this,ProgressUpdateActivity.class);
+                updateAct.putExtras(bundle);
                 startActivity(updateAct);
                 finish();
                 break;
             case R.id.redeemPoints:
+                Bundle bunndle = new Bundle();
+                bunndle.putInt("points", Integer.parseInt(chrysPoints));
                 Intent redeemAct = new Intent(this, RedeemPointsActivity.class);
+                redeemAct.putExtras(bunndle);
                 startActivity(redeemAct);
                 finish();
                 break;
