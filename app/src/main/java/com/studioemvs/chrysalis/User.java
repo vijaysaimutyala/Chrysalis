@@ -20,6 +20,9 @@ public  class User {
     String personalProjects;
     Boolean admin;
     String uid;
+    RecentActivity recentActivity;
+
+
 
     public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel,
                 String currentWork, String personalProjects, Boolean admin, String uid) {
@@ -34,6 +37,24 @@ public  class User {
         this.uid = uid;
     }
 
+    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup,
+                String chrysalisLevel, String currentWork, String personalProjects, Boolean admin, String uid,
+                RecentActivity recentActivity) {
+        this.emailid = emailid;
+        this.username = username;
+        this.chrysalisPoints = chrysalisPoints;
+        this.chrysalisGroup = chrysalisGroup;
+        this.chrysalisLevel = chrysalisLevel;
+        this.currentWork = currentWork;
+        this.personalProjects = personalProjects;
+        this.admin = admin;
+        this.uid = uid;
+        this.recentActivity = recentActivity;
+    }
+
+    public RecentActivity getRecentActivity() {
+        return recentActivity;
+    }
 
     public User() {
     }
@@ -88,6 +109,42 @@ public  class User {
         result.put("admin",admin);
         result.put("uid",uid);
         return result;
+    }
+    @IgnoreExtraProperties
+    public static class RecentActivity {
+        String id;
+        String activity;
+        int points;
+
+        public RecentActivity() {
+        }
+
+        public RecentActivity(String id, String activity, int points) {
+            this.id = id;
+            this.activity = activity;
+            this.points = points;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getActivity() {
+            return activity;
+        }
+
+        public int getPoints() {
+            return points;
+        }
+
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("id", id);
+            result.put("activity", activity);
+            result.put("points", points);
+            return result;
+        }
     }
 
 }

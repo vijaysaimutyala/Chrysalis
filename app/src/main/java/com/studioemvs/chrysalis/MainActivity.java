@@ -31,8 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
     String TAG ="Main Activity";
-    String userKey,username,chrysLevel,chrysGroup;
-    int chrysPoints;
+    String userKey,username,chrysLevel,chrysGroup,chrysPoints;
     Query userDataQuery;
     TextView name,level,points,group;
     ProgressDialog progressDialog;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 username = userdata.getUsername();
                                 chrysLevel = userdata.getChrysalisLevel();
                                 chrysGroup = userdata.getChrysalisGroup();
-                                chrysPoints = userdata.getChrysalisPoints();
+                                chrysPoints = String.valueOf(userdata.getChrysalisPoints());
                             }
                         }
 
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
                     name.setText(username);
                     level.setText(chrysLevel);
-//      points.setText(chrysPoints);
+                    points.setText(chrysPoints);
                     group.setText(chrysGroup);
                     progressDialog.hide();
                 } else {
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     username = userdata.getUsername();
                     chrysLevel = userdata.getChrysalisLevel();
                     chrysGroup = userdata.getChrysalisGroup();
-                    chrysPoints = userdata.getChrysalisPoints();
+                    chrysPoints = String.valueOf(userdata.getChrysalisPoints());
                 }
 
             }
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         name.setText(username);
         level.setText(chrysLevel);
-//      points.setText(chrysPoints);
+        points.setText(chrysPoints);
         group.setText(chrysGroup);
         progressDialog.hide();
     }

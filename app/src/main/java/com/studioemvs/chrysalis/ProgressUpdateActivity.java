@@ -76,6 +76,12 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 if (user!=null){
                     userKey = user.getUid();
                     submitActivityToAdmin(pointsForActivity,activityCompleted);
+                    try {
+                        Thread.sleep(2000);
+                        updatePoints(pointsForActivity);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
@@ -83,16 +89,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
         }
     }
 
-
-    private void submitActivityToAdmin(final int points, String activity) {
-        DatabaseReference recRef = userRef.child(userKey+"/recentActivity/");
-        String key = recRef.push().getKey();
-        RecentActivity recentActivity = new RecentActivity(String.valueOf(ServerValue.TIMESTAMP),activity,points);
-        Map<String,Object> recActivity = recentActivity.toMap();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(key, recActivity);
-        recRef.updateChildren(childUpdates);
-
+    private void updatePoints(final int pointsForActivity) {
         //add points to already existing ones
         userRef.child(userKey).runTransaction(new Transaction.Handler() {
             @Override
@@ -101,7 +98,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 if (user ==null){
                     return Transaction.success(mutableData);
                 }
-                user.chrysalisPoints = user.chrysalisPoints+points;
+                user.chrysalisPoints = user.chrysalisPoints+pointsForActivity;
                 mutableData.setValue(user);
                 return Transaction.success(mutableData);
             }
@@ -110,5 +107,16 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 Log.d("point update", "postTransaction:onComplete:" + databaseError);
             }
         });
+    }
+
+
+    private void submitActivityToAdmin(final int points, String activity) {
+        DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
+        String key = recRef.push().getKey();
+        User.RecentActivity recentActivity = new User.RecentActivity("recentss",activity,points);
+        Map<String,Object> recActivity = recentActivity.toMap();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(userKey+"/"+"recentActivity/"+key, recActivity);
+        userRef.updateChildren(childUpdates);
     }
 }
