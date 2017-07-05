@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +29,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import static android.support.v7.widget.RecyclerView.*;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextView name,level,points,group;
     ProgressDialog progressDialog;
     Button updateActivity,redeemPoints;
+    RecyclerView recentActivity;
+    FirebaseRecyclerAdapter activityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         points = (TextView)findViewById(R.id.chrysPoints);
         updateActivity = (Button)findViewById(R.id.updateActivity);
         redeemPoints = (Button)findViewById(R.id.redeemPoints);
+        recentActivity = (RecyclerView)findViewById(R.id.rv_recentActivity);
+        recentActivity.setLayoutManager(new LinearLayoutManager(this));
         progressDialog = new ProgressDialog(this);
         updateActivity.setOnClickListener(this);
         redeemPoints.setOnClickListener(this);
@@ -96,6 +105,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
+        activityAdapter = new FirebaseRecyclerAdapter<User.RecentActivity,ActivityHolder>(User.RecentActivity.class,R.layout.activity_recent_dummy,ActivityHolder.class,userRef.child("uid").child("recentActivity")) {
+            @Override
+            protected void populateViewHolder(ActivityHolder viewHolder, User.RecentActivity model, int position) {
+                viewHolder.setActivity(model.getActivity());
+            }
+        };
+        recentActivity.setAdapter(activityAdapter);
+    }
+
+    public static class ActivityHolder extends RecyclerView.ViewHolder{
+        TextView activity;
+
+        public ActivityHolder(View itemView) {
+            super(itemView);
+            activity = (TextView)itemView.findViewById(R.id.txt_activity);
+        }
+
+        public void setActivity(String activityName) {
+            activity.setText(activityName);
+        }
     }
 
     private void getUserData(final String userkey) {
