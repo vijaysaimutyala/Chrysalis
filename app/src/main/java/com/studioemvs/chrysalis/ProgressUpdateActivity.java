@@ -34,11 +34,12 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
     TextView points;
     Button submitPoints;
     int[] activityPoints = {50,100,100,200,200,500,500,500,500,1000,1000,1000,2500,100,150,250,500};
-    DatabaseReference userRef;
+    DatabaseReference mainRef,userRef;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     String userKey,activityCompleted;
     int pointsForActivity,prevPoints;
+    Boolean approval = false;
 
 
     @Override
@@ -47,7 +48,8 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
         setContentView(R.layout.activity_progress_update);
         Bundle bundle = getIntent().getExtras();
         prevPoints = bundle.getInt("points");
-        userRef = FirebaseDatabase.getInstance().getReference().child("users");
+        mainRef = FirebaseDatabase.getInstance().getReference();
+        userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
         activity = (Spinner)findViewById(R.id.activitySpinner);
         points = (TextView)findViewById(R.id.pointsForActivity);
@@ -63,9 +65,9 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String actPoints = String.valueOf(activityPoints[i]);
-        pointsForActivity = activityPoints[i];
-        activityCompleted = activity.getSelectedItem().toString();
         points.setText(actPoints);
+        pointsForActivity = Integer.parseInt(actPoints);
+        activityCompleted = activity.getSelectedItem().toString();
     }
 
     @Override
@@ -81,7 +83,8 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 if (user!=null){
                     userKey = user.getUid();
                     updatePoints(pointsForActivity);
-                    submitActivityToAdmin(pointsForActivity,activityCompleted);
+                    submitActivityToAdmin(pointsForActivity,activityCompleted,approval);
+                    updateActInMain(pointsForActivity, activityCompleted,approval);
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
@@ -116,14 +119,26 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
     }
 
 
-    private void submitActivityToAdmin(final int points, String activity) {
+    private void submitActivityToAdmin(final int points, String activity,Boolean approval) {
         DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
         String key = recRef.push().getKey();
-        String id = String.valueOf(Calendar.getInstance().getTimeInMillis());
-        User.RecentActivity recentActivity = new User.RecentActivity(id,activity,points);
-        Map<String,Object> recActivity = recentActivity.toMap();
+        long id = System.currentTimeMillis();
+        String userid = userKey;
+        Log.d("progress update ", "submitActivityToAdmin: "+points+"activity: "+activity);
+        User.RecentActivity recentActivityInUser = new User.RecentActivity(activity,points,approval,id);
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(userKey+"/"+"recentActivity/"+key, recActivity);
+        childUpdates.put(userKey+"/"+"recentActivity/"+key, recentActivityInUser);
         userRef.updateChildren(childUpdates);
     }
+
+    private void updateActInMain(final int points, String activity,Boolean approval) {
+        DatabaseReference mainRecRef = mainRef.child("recentActivity");
+        String mainRecKey = mainRecRef.push().getKey();
+        long id = System.currentTimeMillis();
+        User.RecentActivity recentActivityInMain = new User.RecentActivity(userKey,activity,points,approval,id);
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(mainRecKey, recentActivityInMain);
+        mainRecRef.updateChildren(childUpdates);
+    }
+
 }

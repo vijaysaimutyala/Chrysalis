@@ -17,7 +17,7 @@
         android:id="@+id/profilePic"
         android:layout_width="109dp"
         android:layout_height="113dp"
-        app:srcCompat="@drawable/cast_album_art_placeholder_large"
+        app:srcCompat="@drawable/elon"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -66,14 +66,17 @@
         android:id="@+id/recentActivity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/recentActivity" />
+        android:text="@string/recentActivity"
+        android:textSize="20sp"
+        android:textColor="@color/primary_text_material_light"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:id="@+id/rv_recentActivity"
-        android:layout_below="@id/recentActivity" />
+        android:layout_below="@id/recentActivity"
+        android:background="?android:attr/selectableItemBackground"/>
 </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

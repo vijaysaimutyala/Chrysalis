@@ -60,5 +60,19 @@
 "Participated in 10 consecutive meetings":250,
 "Participated in 10 consecutive meetings":500}
     </string>
+    <string name="title_activity_admins">AdminsActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="toBeApproved">To be approved</string>
+    <string name="viewProfile">View My Profile</string>
+    <string name="adminPage">Me as Admin</string>
+    <string name="adminUser">Me as User</string>
+    <string name="username">Username</string>
+    <string name="activity">Activity</string>
+    <string name="points">Points</string>
+    <string name="approve">Approve</string>
+    <string name="reject">Reject</string>
+    <string name="comments">Comments if any...</string>
 
 </resources>

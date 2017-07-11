@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:padding="10dp">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableActivityData">
+        <TableRow>
+            <TextView
+                android:id="@+id/approve_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/username"/>
+            <TextView
+                android:id="@+id/approve_rslt_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vijay Sai"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/approve_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity" />
+
+            <TextView
+                android:id="@+id/approve_rslt_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Built POC"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/approve_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/points" />
+
+            <TextView
+                android:id="@+id/approve_rslt_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vijay Sai"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/approve_comments"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/border_text_view"
+                android:layout_weight="1"
+                android:hint="@string/comments"
+                android:gravity="top|left"/>
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/approveRejectButtons"
+        android:weightSum="2"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/tableActivityData"
+        android:layout_marginTop="10dp">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/approveActivity"
+            android:text="@string/approve"
+            android:layout_weight="1" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rejectActivity"
+            android:text="@string/reject"
+            android:layout_weight="1"/>
+    </LinearLayout>
+</RelativeLayout>

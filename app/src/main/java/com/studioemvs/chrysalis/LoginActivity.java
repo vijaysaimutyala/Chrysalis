@@ -1,5 +1,7 @@
 package com.studioemvs.chrysalis;
 
+import android.net.Uri;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -14,12 +16,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.security.KeyStore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,14 +40,23 @@ public class LoginActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    DatabaseReference mainRef,userRef;
+    Boolean adminState;
+    String uid;
+    VideoView videoBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mainRef = FirebaseDatabase.getInstance().getReference();
+        userRef = mainRef.child("users");
         progressDialog = new ProgressDialog(this);
+        //videoBackground = (VideoView)findViewById(R.id.videoView);
+        //Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.metamorphosis);
+        //videoBackground.setVideoURI(uri);
+        //videoBackground.start();
         email = (EditText)findViewById(R.id.edt_email);
         pwd = (EditText)findViewById(R.id.edt_password);
         login = (Button)findViewById(R.id.btn_Login);
@@ -61,12 +80,25 @@ public class LoginActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    uid = user.getUid();
+                    userRef.child(uid).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User useData = dataSnapshot.getValue(User.class);
+                            adminState = useData.getAdmin();
+                            roleBasedCheck(adminState,uid);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -74,6 +106,19 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         };
+    }
+
+    private void roleBasedCheck(Boolean admin,String uid) {
+        if (admin){
+            Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            Bundle userBundle = new Bundle();
+            userBundle.putString("uid",uid);
+            intent.putExtras(userBundle);
+            startActivity(intent);
+        }
     }
 
     private void signIn() {

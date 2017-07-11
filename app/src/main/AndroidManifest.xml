@@ -20,9 +20,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".UpdateProgressActivity" />
         <activity android:name=".RedeemPointsActivity" />
-        <activity android:name=".ProgressUpdateActivity"></activity>
+        <activity android:name=".ProgressUpdateActivity" />
+        <activity android:name=".AdminActivity" />
+        <activity android:name=".ApprovalsActivity"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,8 @@ package com.studioemvs.chrysalis;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.ReceiverCallNotAllowedException;
+import android.icu.util.BuddhistCalendar;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.support.v7.widget.RecyclerView.*;
@@ -37,19 +40,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     DatabaseReference mainRef,userRef;
     String TAG ="Main Activity";
     String userKey,username,chrysLevel,chrysGroup,chrysPoints;
-    Query userDataQuery;
+    Query userDataQuery,activityQuery;
     TextView name,level,points,group;
     ProgressDialog progressDialog;
     Button updateActivity,redeemPoints;
     RecyclerView recentActivity;
-    FirebaseRecyclerAdapter activityAdapter;
+    FirebaseRecyclerAdapter<User.RecentActivity,ActivityHolder> activityAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getSupportActionBar().setTitle("My Profile");
+
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
+
         mAuth = FirebaseAuth.getInstance();
         name = (TextView)findViewById(R.id.profileName);
         level = (TextView)findViewById(R.id.chrysLevel);
@@ -57,12 +64,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         points = (TextView)findViewById(R.id.chrysPoints);
         updateActivity = (Button)findViewById(R.id.updateActivity);
         redeemPoints = (Button)findViewById(R.id.redeemPoints);
+
         recentActivity = (RecyclerView)findViewById(R.id.rv_recentActivity);
         recentActivity.setLayoutManager(new LinearLayoutManager(this));
+
+
         progressDialog = new ProgressDialog(this);
         updateActivity.setOnClickListener(this);
         redeemPoints.setOnClickListener(this);
 
+        checkAuthorization();
+    }
+
+    private void checkAuthorization() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -74,28 +88,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
                     progressDialog.setMessage("Fetching user data");
                     progressDialog.show();
-                    userRef.orderByChild("uid").equalTo(userKey).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                                User userdata = userSnapshot.getValue(User.class);
-                                username = userdata.getUsername();
-                                chrysLevel = userdata.getChrysalisLevel();
-                                chrysGroup = userdata.getChrysalisGroup();
-                                chrysPoints = String.valueOf(userdata.getChrysalisPoints());
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    name.setText(username);
-                    level.setText(chrysLevel);
-                    points.setText(chrysPoints);
-                    group.setText(chrysGroup);
-                    progressDialog.hide();
+                    getUserData(userKey);//settingtextView
+                    getRecentActivity(userKey);//settingRecentActivities
                 } else {
                     // User is signed out
                     Intent intent = new Intent(MainActivity.this,LoginActivity.class);
@@ -105,14 +99,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         };
-        activityAdapter = new FirebaseRecyclerAdapter<User.RecentActivity,ActivityHolder>(User.RecentActivity.class,R.layout.activity_recent_dummy,ActivityHolder.class,userRef.child("uid").child("recentActivity")) {
+    }
+
+    private void getRecentActivity(final String userkey) {
+        activityQuery = userRef.child(userkey).child("recentActivity").orderByChild("id");
+        activityAdapter =new FirebaseRecyclerAdapter<User.RecentActivity, ActivityHolder>(User.RecentActivity.class,R.layout.activity_recent_dummy,ActivityHolder.class,activityQuery) {
             @Override
             protected void populateViewHolder(ActivityHolder viewHolder, User.RecentActivity model, int position) {
-                viewHolder.setActivity(model.getActivity());
+                viewHolder.activity.setText(model.getActivity());
             }
         };
         recentActivity.setAdapter(activityAdapter);
+        progressDialog.hide();
     }
+
 
     public static class ActivityHolder extends RecyclerView.ViewHolder{
         TextView activity;
@@ -121,39 +121,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             super(itemView);
             activity = (TextView)itemView.findViewById(R.id.txt_activity);
         }
-
-        public void setActivity(String activityName) {
-            activity.setText(activityName);
-        }
     }
 
     private void getUserData(final String userkey) {
         Log.d(TAG, "getUserData: "+userkey);
-        userRef.orderByChild("uid").equalTo(userkey).addValueEventListener(new ValueEventListener() {
+        userRef.child(userkey).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User userProfile = new User();
-
-                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                    User userdata = userSnapshot.getValue(User.class);
-                    username = userdata.getUsername();
-                    chrysLevel = userdata.getChrysalisLevel();
-                    chrysGroup = userdata.getChrysalisGroup();
-                    chrysPoints = String.valueOf(userdata.getChrysalisPoints());
+                User userProfile = dataSnapshot.getValue(User.class);
+                username = userProfile.getUsername();
+                chrysLevel = userProfile.getChrysalisLevel();
+                chrysGroup = userProfile.getChrysalisGroup();
+                chrysPoints = String.valueOf(userProfile.getChrysalisPoints());
+                name.setText(username);
+                level.setText(chrysLevel);
+                points.setText(chrysPoints);
+                group.setText(chrysGroup);
                 }
-
-            }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-        name.setText(username);
-        level.setText(chrysLevel);
-        points.setText(chrysPoints);
-        group.setText(chrysGroup);
-        progressDialog.hide();
+
     }
 
     @Override

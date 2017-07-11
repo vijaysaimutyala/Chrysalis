@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/adminProfileasUser"
+        android:title="@string/adminUser" />
+    <item android:id="@+id/adminsignout"
+        android:title="@string/signout" />
+    <item android:id="@+id/adminPage"
+        android:title="@string/adminPage"/>
+</menu>

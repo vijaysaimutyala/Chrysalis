@@ -9,7 +9,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignUpActivity"
-    android:id="@+id/signUpActivity">
+    android:id="@+id/signUpActivity"
+    android:padding="5dp">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,7 +18,8 @@
         android:id="@+id/welcome"
         android:textSize="20sp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/primary_text_material_light"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +28,6 @@
         android:hint="@string/name"
         android:inputType="textPersonName"
         android:imeOptions="actionNext"
-        android:layout_marginTop="50dp"
         android:maxLines="1"/>
     <EditText
         android:layout_width="match_parent"
@@ -42,26 +43,27 @@
         android:layout_height="40dp"
         android:id="@+id/interestGroup"
         android:entries="@array/interestGroups"
-        android:layout_below="@id/edt_signup_email"
-        android:background="@drawable/border_text_view"/>
+        android:layout_below="@id/edt_signup_email"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="75dp"
         android:id="@+id/areaOfCurrentWork"
         android:hint="@string/currentWork"
         android:background="@drawable/border_text_view"
-        android:layout_below="@id/interestGroup"
+        android:gravity="top"
+        android:layout_below="@+id/interestGroup"
         android:layout_alignParentStart="true"
-        android:gravity="top"/>
+        android:layout_marginTop="10dp"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:layout_marginTop="5dp"
         android:id="@+id/personalProject"
         android:hint="@string/personalProject"
-        android:layout_below="@id/areaOfCurrentWork"
         android:background="@drawable/border_text_view"
-        android:gravity="top"/>
+        android:gravity="top"
+        android:layout_below="@+id/areaOfCurrentWork"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
         android:inputType="textPassword"
         android:layout_marginTop="10dp"
         android:imeOptions="actionNext"
-        android:maxLines="1"/>
+        android:maxLines="1" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

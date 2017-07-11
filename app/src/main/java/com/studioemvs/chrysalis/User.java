@@ -2,6 +2,7 @@ package com.studioemvs.chrysalis;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.ServerValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,29 +111,49 @@ public  class User {
         result.put("personalProjects",personalProjects);
         result.put("admin",admin);
         result.put("uid",uid);
-        result.put("id",recentActivity.id);
+        result.put("userid",recentActivity.userid);
         result.put("activity",recentActivity.activity);
         result.put("points",recentActivity.points);
         return result;
     }
     @IgnoreExtraProperties
     public static class RecentActivity {
-        String id;
+        String userid;
         String activity;
         int points;
+        Boolean approval;
+        Long id;
 
         public RecentActivity() {
         }
 
-        public RecentActivity(String id, String activity, int points) {
-            this.id = id;
+
+        public RecentActivity(String userid, String activity, int points) {
+            this.userid = userid;
             this.activity = activity;
             this.points = points;
         }
 
-        public String getId() {
-            return id;
+        public RecentActivity(String activity, int points, Boolean approval, Long id) {
+            this.activity = activity;
+            this.points = points;
+            this.approval = approval;
+            this.id = id;
         }
+
+        public RecentActivity(String userid, String activity, int points, Boolean approval,  Long id) {
+            this.userid = userid;
+            this.activity = activity;
+            this.points = points;
+            this.approval = approval;
+            this.id = id;
+        }
+
+
+        public Boolean getApproval() {
+            return approval;
+        }
+
 
         public String getActivity() {
             return activity;
@@ -142,12 +163,22 @@ public  class User {
             return points;
         }
 
+        public String getUserid() {
+            return userid;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
         @Exclude
         public Map<String, Object> toMap() {
             HashMap<String, Object> result = new HashMap<>();
-            result.put("id", id);
+            result.put("userid", userid);
             result.put("activity", activity);
             result.put("points", points);
+            result.put("approval",approval);
+            result.put("id", id);
             return result;
         }
     }
