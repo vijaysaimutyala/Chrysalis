@@ -1,0 +1,102 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.studioemvs.chrysalis.UserProfileFragment">
+    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:src="@drawable/aai"
+    android:id="@+id/background_image_view"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:foregroundGravity="center_horizontal"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/elon"
+        app:civ_border_width="1dp"
+        app:civ_border_color="#FFffffff"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"/>
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vijay Sai Mutyala"
+        android:textSize="20sp"
+        android:layout_below="@+id/profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold|italic"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/profileName"
+        android:layout_marginTop="10dp"
+        android:id="@+id/relPoints">
+
+        <ImageView
+            android:id="@+id/trophy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_trophy" />
+
+        <TextView
+            android:id="@+id/chrysPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="200"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/trophy"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/chrysLevel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chrysalis Member"
+        android:textSize="17sp"
+        android:layout_below="@id/relPoints"
+        android:layout_centerHorizontal="true"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/chrysGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI &amp; ML"
+        android:layout_below="@id/chrysLevel"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/white"/>
+    <com.hanks.htextview.line.LineTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/infoText"
+        android:layout_below="@id/chrysGroup"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="5dp"
+        android:paddingRight="10dp"
+        android:textColor="@android:color/black"
+        android:text="You are 500 points away from becoming a Chrysalis coordinator"
+        android:textSize="16sp"
+        app:animationDuration="3000"
+        android:background="#ffffff"
+        app:lineColor="#ff0000"
+        app:lineWidth="4dp"/>
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/infoText"
+    android:id="@+id/recActivityBtn"
+    android:text="@string/recentActivity"/>
+</RelativeLayout>
