@@ -25,7 +25,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"/>
     <TextView
-        android:id="@+id/profileName"
+        android:id="@+id/frag_profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Vijay Sai Mutyala"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_below="@+id/profileName"
+        android:layout_below="@id/frag_profileName"
         android:layout_marginTop="10dp"
         android:id="@+id/relPoints">
 
@@ -51,7 +51,7 @@
             app:srcCompat="@drawable/ic_trophy" />
 
         <TextView
-            android:id="@+id/chrysPoints"
+            android:id="@+id/frag_chrysPoints"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="200"
@@ -61,7 +61,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/chrysLevel"
+        android:id="@+id/frag_chrysLevel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chrysalis Member"
@@ -71,18 +71,18 @@
         android:textColor="@android:color/white"/>
 
     <TextView
-        android:id="@+id/chrysGroup"
+        android:id="@+id/frag_chrysGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AI &amp; ML"
-        android:layout_below="@id/chrysLevel"
+        android:layout_below="@id/frag_chrysLevel"
         android:layout_centerInParent="true"
         android:textColor="@android:color/white"/>
     <com.hanks.htextview.line.LineTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/infoText"
-        android:layout_below="@id/chrysGroup"
+        android:id="@+id/frag_infoText"
+        android:layout_below="@id/frag_chrysGroup"
         android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:paddingRight="10dp"
@@ -96,7 +96,7 @@
 <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/infoText"
+    android:layout_below="@id/frag_infoText"
     android:id="@+id/recActivityBtn"
     android:text="@string/recentActivity"/>
 </RelativeLayout>

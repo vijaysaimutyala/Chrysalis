@@ -157,10 +157,8 @@ public class AdminActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.adminPage:
-                return true;
             case R.id.adminProfileasUser:
-                Intent adminAsUser = new Intent(AdminActivity.this,MainActivity.class);
+                Intent adminAsUser = new Intent(AdminActivity.this,UserAndStatusActivity.class);
                 startActivity(adminAsUser);
                 finish();
                 return true;

@@ -4,6 +4,4 @@
         android:title="@string/adminUser" />
     <item android:id="@+id/adminsignout"
         android:title="@string/signout" />
-    <item android:id="@+id/adminPage"
-        android:title="@string/adminPage"/>
 </menu>

@@ -1,6 +1,7 @@
 package com.studioemvs.chrysalis;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.vision.text.Text;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hanks.htextview.line.LineTextView;
 
 import java.util.ArrayList;
@@ -31,9 +42,17 @@ import java.util.List;
 
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener{
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    DatabaseReference mainRef,userRef;
+    String TAG ="User Profile Fragment";
+    String userKey,username,chrysLevel,chrysGroup,chrysPoints;
+    Query userDataQuery,activityQuery;
     ImageView imageView;
-    LineTextView lineTextView;
+    LineTextView infoForUser;
+    ProgressDialog progressDialog;
     Button recentActivity;
+    TextView name,level,points,group;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -55,15 +74,90 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        mainRef = FirebaseDatabase.getInstance().getReference();
+        userRef = mainRef.child("users");
+        mAuth = FirebaseAuth.getInstance();
         imageView = (ImageView)rootView.findViewById(R.id.background_image_view);
-        lineTextView = (LineTextView)rootView.findViewById(R.id.infoText);
+        name = (TextView)rootView.findViewById(R.id.frag_profileName);
+        level = (TextView)rootView.findViewById(R.id.frag_chrysLevel);
+        points = (TextView)rootView.findViewById(R.id.frag_chrysPoints);
+        group = (TextView)rootView.findViewById(R.id.frag_chrysGroup);
+        progressDialog = new ProgressDialog(this.getContext());
+        infoForUser = (LineTextView)rootView.findViewById(R.id.frag_infoText);
         recentActivity = (Button)rootView.findViewById(R.id.recActivityBtn);
         recentActivity.setOnClickListener(this);
+
         BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         Bitmap blurred = blurRenderScript(bitmap,7);
         imageView.setImageBitmap(blurred);
+
+        checkAuthorization();
+
         return rootView;
+    }
+    private void checkAuthorization() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Toast.makeText(getContext(), "User" +user.getEmail()+"is logged in!", Toast.LENGTH_SHORT).show();
+                    userKey = user.getUid();
+                    Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
+                    progressDialog.setMessage("Fetching user data");
+                    progressDialog.show();
+                    getUserData(userKey);//settingtextView
+                    progressDialog.hide();
+
+                } else {
+                    // User is signed out
+                    Intent intent = new Intent(getContext(),LoginActivity.class);
+                    startActivity(intent);
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        };
+    }
+    private void getUserData(final String userkey) {
+        Log.d(TAG, "getUserData: "+userkey);
+        userRef.child(userkey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User userProfile = dataSnapshot.getValue(User.class);
+                username = userProfile.getUsername();
+                chrysLevel = userProfile.getChrysalisLevel();
+                chrysGroup = userProfile.getChrysalisGroup();
+                chrysPoints = String.valueOf(userProfile.getChrysalisPoints());
+                name.setText(username);
+                level.setText(chrysLevel);
+                points.setText(chrysPoints);
+                group.setText(chrysGroup);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, "onCancelled: "+databaseError);
+                Toast.makeText(getContext(), " "+databaseError, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @SuppressLint("NewApi")

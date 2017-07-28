@@ -1,5 +1,6 @@
 package com.studioemvs.chrysalis;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,22 +27,27 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Transaction;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-public class ProgressUpdateActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    Spinner activity;
-    TextView points;
+public class ProgressUpdateActivity extends AppCompatActivity implements View.OnClickListener {
+
     Button submitPoints;
     int[] activityPoints = {50,100,100,200,200,500,500,500,500,1000,1000,1000,2500,100,150,250,500};
     DatabaseReference mainRef,userRef;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
-    String userKey,activityCompleted;
+    String userKey,activityCompleted,activity;
     int pointsForActivity,prevPoints;
     Boolean approval = false;
+    Calendar myCalendar;
+    EditText activityDate,comments;
+    TextView activityTxt,pointsTxt;
+
 
 
     @Override
@@ -47,21 +55,48 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_update);
         Bundle bundle = getIntent().getExtras();
-        prevPoints = bundle.getInt("points");
+        pointsForActivity = bundle.getInt("points");
+        activityCompleted = bundle.getString("activity");
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
-        activity = (Spinner)findViewById(R.id.activitySpinner);
-        points = (TextView)findViewById(R.id.pointsForActivity);
+        myCalendar = Calendar.getInstance();
         submitPoints = (Button)findViewById(R.id.submitActivity);
+        activityTxt = (TextView)findViewById(R.id.update_rslt_activity);
+        pointsTxt = (TextView)findViewById(R.id.update_rslt_points);
+        activityDate = (EditText)findViewById(R.id.date_rslt_points);
+        comments = (EditText)findViewById(R.id.update_comments);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.activities, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        activity.setAdapter(adapter);
-        activity.setOnItemSelectedListener(this);
+/*        activity.setAdapter(adapter);
+        activity.setOnItemSelectedListener(this);*/
+        activityTxt.setText(activityCompleted);
+        pointsTxt.setText(String.valueOf(pointsForActivity));
         submitPoints.setOnClickListener(this);
-    }
+        activityDate.setOnClickListener(this);
 
+    }
+    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            // TODO Auto-generated method stub
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
+        }
+
+    };
+    private void updateLabel() {
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+        activityDate.setText(sdf.format(myCalendar.getTime()));
+    }
+/*
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String actPoints = String.valueOf(activityPoints[i]);
@@ -73,7 +108,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-    }
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -82,13 +117,17 @@ public class ProgressUpdateActivity extends AppCompatActivity implements Adapter
                 FirebaseUser user =  mAuth.getCurrentUser();
                 if (user!=null){
                     userKey = user.getUid();
-                    updatePoints(pointsForActivity);
+                    //updatePoints(pointsForActivity);
                     submitActivityToAdmin(pointsForActivity,activityCompleted,approval);
                     updateActInMain(pointsForActivity, activityCompleted,approval);
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
                 }
+            case R.id.date_rslt_points:
+                new DatePickerDialog(ProgressUpdateActivity.this, date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         }
     }
 

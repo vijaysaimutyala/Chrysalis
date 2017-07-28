@@ -89,7 +89,12 @@ public class LoginActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User useData = dataSnapshot.getValue(User.class);
                             adminState = useData.getAdmin();
-                            roleBasedCheck(adminState,uid);
+                            Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
+                            Bundle userBundle = new Bundle();
+                            userBundle.putString("uid",uid);
+                            intent.putExtras(userBundle);
+                            startActivity(intent);
+                           // roleBasedCheck(adminState,uid);
                         }
 
                         @Override
@@ -113,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
             startActivity(intent);
         }else {
-            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
             Bundle userBundle = new Bundle();
             userBundle.putString("uid",uid);
             intent.putExtras(userBundle);

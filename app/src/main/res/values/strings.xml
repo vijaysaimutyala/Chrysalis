@@ -80,5 +80,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="date">Date</string>
+    <string name="dateOfActivity">Date Of Activity</string>
+    <string name="approved">Approved</string>
+    <string name="rejected">Rejected</string>
 
 </resources>

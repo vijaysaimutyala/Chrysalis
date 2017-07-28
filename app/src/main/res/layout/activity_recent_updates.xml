@@ -1,9 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.studioemvs.chrysalis.RecentUpdatesActivity">
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:id="@+id/relUpdates"
+tools:context="com.studioemvs.chrysalis.RecentUpdatesActivity">
 
-</android.support.constraint.ConstraintLayout>
+
+    <RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:id="@+id/legendLayout"
+    android:gravity="center_vertical"
+    android:layout_marginTop="5dp">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_square_green"
+        android:id="@+id/green"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/approveLegend" />
+
+    <TextView
+        android:id="@+id/approveLegend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/approved"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/orange" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_square_orange"
+        android:id="@+id/orange"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/rejectLegend"
+        android:layout_marginLeft="3dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rejectLegend"
+        android:text="@string/rejected"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:id="@+id/recUpdate_recentActivity"
+        android:layout_below="@id/legendLayout"
+        android:layout_marginTop="5dp"/>
+
+
+</RelativeLayout>

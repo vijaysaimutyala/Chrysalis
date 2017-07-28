@@ -18,6 +18,7 @@
             android:id="@+id/txt_activity"
             android:text="Hello"
             android:textSize="20sp"
+            android:paddingLeft="5dp"
             android:textColor="@android:color/black" />
         <TextView
             android:layout_width="wrap_content"
@@ -25,7 +26,8 @@
             android:id="@+id/txt_points"
             android:text="50"
             android:layout_alignParentEnd="true"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:paddingRight="3dp"/>
 
     </RelativeLayout>
 

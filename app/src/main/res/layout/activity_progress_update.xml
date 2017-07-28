@@ -1,13 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    tools:context="com.studioemvs.chrysalis.ProgressUpdateActivity"
-    android:layout_margin="10dp">
+    android:layout_width="match_parent"
+    android:padding="10dp">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tableActivityData"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <TableRow
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/update_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity" />
 
-    <Spinner
+            <TextView
+                android:id="@+id/update_rslt_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Built POC"
+                android:textSize="15sp"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/update_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/points" />
+
+            <TextView
+                android:id="@+id/update_rslt_points"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vijay Sai"
+                android:textSize="15sp"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/update_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/date_rslt_points"
+                android:clickable="true"
+                android:inputType="date"
+                android:hint="@string/dateOfActivity"
+                android:focusable="false"
+                android:textSize="15sp"
+                android:textColor="@color/primary_text_material_light"/>
+           </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/update_comments"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/border_text_view"
+                android:layout_weight="1"
+                android:hint="@string/comments"
+                android:gravity="top|left"
+                android:padding="5dp"/>
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/submitActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="@string/submit"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
+
+<!--    <Spinner
         android:layout_width="348dp"
         android:layout_height="50dp"
         android:id="@+id/activitySpinner"
@@ -17,8 +97,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent">
-    </Spinner>
-    <TextView
+    </Spinner>-->
+<!--    <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/pointsForActivity"
@@ -27,22 +107,5 @@
         android:layout_marginTop="102dp"
         app:layout_constraintTop_toBottomOf="@id/activitySpinner"
         android:layout_marginLeft="143dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent" />-->
 
-    <Button
-        android:id="@+id/submitActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/submit"
-        android:layout_marginTop="110dp"
-        app:layout_constraintTop_toBottomOf="@id/pointsForActivity"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.447" />
-
-
-</android.support.constraint.ConstraintLayout>
