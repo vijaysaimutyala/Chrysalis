@@ -53,6 +53,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     ProgressDialog progressDialog;
     Button recentActivity;
     TextView name,level,points,group;
+    Boolean adminState;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -104,6 +105,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 if (user != null) {
                     // User is signed in
                     Toast.makeText(getContext(), "User" +user.getEmail()+"is logged in!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onAuthStateChanged: "+user.getUid());
                     userKey = user.getUid();
                     Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
                     progressDialog.setMessage("Fetching user data");
@@ -126,10 +128,16 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User userProfile = dataSnapshot.getValue(User.class);
+                Log.d(TAG, "userprofile fragments: "+userProfile);
+                adminState = userProfile.getAdmin();
                 username = userProfile.getUsername();
                 chrysLevel = userProfile.getChrysalisLevel();
                 chrysGroup = userProfile.getChrysalisGroup();
                 chrysPoints = String.valueOf(userProfile.getChrysalisPoints());
+/*                Bundle dataToActivity = new Bundle();
+                dataToActivity.putBoolean("adminState",adminState);
+                Intent intent = getActivity().getIntent();
+                intent.putExtras(dataToActivity);*/
                 name.setText(username);
                 level.setText(chrysLevel);
                 points.setText(chrysPoints);
@@ -138,7 +146,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG, "onCancelled: "+databaseError);
-                Toast.makeText(getContext(), " "+databaseError, Toast.LENGTH_SHORT).show();
             }
         });
 

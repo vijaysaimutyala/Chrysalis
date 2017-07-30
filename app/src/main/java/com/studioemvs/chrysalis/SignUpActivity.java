@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "Sign Up";
-    EditText email,pwd,cnfpwd,username,areaOfCurrentWork,personalProject;
+    EditText email,pwd,cnfpwd,username,personalProject,empId;
     Button signUp;
     Spinner chrysalisGroup;
     ProgressDialog progressDialog;
@@ -72,13 +72,16 @@ public class SignUpActivity extends AppCompatActivity {
         signUp = (Button)findViewById(R.id.btn_signup_signup);
         username = (EditText)findViewById(R.id.signup_username);
         chrysalisGroup = (Spinner)findViewById(R.id.interestGroup);
-        areaOfCurrentWork = (EditText)findViewById(R.id.areaOfCurrentWork);
+        empId = (EditText)findViewById(R.id.signup_empId);
+        //areaOfCurrentWork = (EditText)findViewById(R.id.areaOfCurrentWork);
         personalProject = (EditText)findViewById(R.id.personalProject);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pwd.length()<8){
+                signUpOnFirebase();
+            }
+/*                if (pwd.length()<8){
                     Toast.makeText(SignUpActivity.this, "Password must be of minimum 8 characters.", Toast.LENGTH_SHORT).show();
                 }else {
                     if (pwd.getText().toString().equals(cnfpwd.getText().toString())){
@@ -87,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
+            }*/
         });
 
 
@@ -115,24 +118,23 @@ public class SignUpActivity extends AppCompatActivity {
                             saveUserDataToFirebase(emailid,uid);
                         }
                         progressDialog.hide();
-
-
-                        // ...
                     }
                 });
     }
 
     private void saveUserDataToFirebase(String emailid, String uid) {
+        Log.d(TAG, "saveUserDataToFirebase: "+emailid+uid);
         // Read from the database
         String name = username.getText().toString();
         String group = chrysalisGroup.getSelectedItem().toString();
+        int employeeId = Integer.parseInt(empId.getText().toString());
         String key = uid;
         int points = 0;
-        String chrysalisLevel = "Beginner";
-        String currentWork = areaOfCurrentWork.getText().toString();
+        String chrysalisLevel = "Beginner";//
         String personalProjects = personalProject.getText().toString();
         Boolean admin = false;
-        User newUser = new User(emailid,name,points, group,chrysalisLevel,currentWork,personalProjects,admin,key);
+        Boolean regApproved = false;
+        User newUser = new User(emailid,name,points, group,chrysalisLevel,personalProjects,admin,key,regApproved,employeeId);
         Map<String,Object> addUser = newUser.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 

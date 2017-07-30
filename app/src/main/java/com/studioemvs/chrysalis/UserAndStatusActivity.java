@@ -1,6 +1,7 @@
 package com.studioemvs.chrysalis;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,11 +29,13 @@ import com.google.firebase.database.DatabaseReference;
 public class UserAndStatusActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_and_status);
+//        getSupportActionBar().setTitle("Profile and Update Activity");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,6 +46,7 @@ public class UserAndStatusActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_content);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -62,9 +66,9 @@ public class UserAndStatusActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.user_adminPage:
-                Intent adminPortal = new Intent(UserAndStatusActivity.this,AdminActivity.class);
-                startActivity(adminPortal);
-                finish();
+                Bundle dataFromLoginPage = getIntent().getExtras();
+                Boolean adminState = dataFromLoginPage.getBoolean("adminState");
+                navigateToAdminPage(adminState);
                 return true;
             case R.id.usersignout:
                 FirebaseAuth.getInstance().signOut();
@@ -73,6 +77,19 @@ public class UserAndStatusActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void navigateToAdminPage(Boolean adminStae) {
+        if (adminStae){
+            Intent adminPortal = new Intent(UserAndStatusActivity.this,AdminActivity.class);
+            startActivity(adminPortal);
+            finish();
+        }else{
+            Snackbar snackbar = Snackbar
+                    .make(coordinatorLayout, "Got you! You're not an Admin.", Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+
     }
 
     /**

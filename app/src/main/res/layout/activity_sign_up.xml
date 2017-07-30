@@ -2,6 +2,7 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -32,28 +33,29 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edt_signup_email"
+        android:id="@+id/signup_empId"
         android:layout_below="@id/signup_username"
-        android:hint="@string/Email"
-        android:inputType="textEmailAddress"
+        android:hint="@string/employeeId"
+        android:inputType="number"
         android:imeOptions="actionNext"
         android:maxLines="1"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edt_signup_email"
+        android:hint="@string/infyId"
+        android:inputType="textEmailAddress"
+        android:imeOptions="actionNext"
+        android:maxLines="1"
+        android:layout_below="@id/signup_empId"
+        android:layout_alignParentStart="true" />
     <android.support.v7.widget.AppCompatSpinner
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/interestGroup"
         android:entries="@array/interestGroups"
         android:layout_below="@id/edt_signup_email"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:id="@+id/areaOfCurrentWork"
-        android:hint="@string/currentWork"
-        android:background="@drawable/border_text_view"
-        android:gravity="top"
-        android:layout_below="@+id/interestGroup"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10dp"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="75dp"
@@ -61,7 +63,7 @@
         android:hint="@string/personalProject"
         android:background="@drawable/border_text_view"
         android:gravity="top"
-        android:layout_below="@+id/areaOfCurrentWork"
+        android:layout_below="@id/interestGroup"
         android:layout_alignParentStart="true"
         android:layout_marginTop="10dp"/>
     <EditText

@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -84,9 +83,13 @@ public class AdminActivity extends AppCompatActivity {
                 R.layout.dummy_tobeapproved, ToApproveHolder.class,toApproveQuery) {
             @Override
             protected void populateViewHolder(ToApproveHolder viewHolder, User.RecentActivity model, int position) {
+                DatabaseReference activityRef =getRef(position);
                 final String activity = model.getActivity().toString();
                 final String userid = model.getUserid();
                 final int points = model.getPoints();
+                final Long id = model.getId();
+                final String key = activityRef.getKey();
+                final String activityKeyInMain = model.getActivityKey();
 
                 viewHolder.toapprove.setText(model.getActivity());
                 viewHolder.toapprovepoints.setText(String.valueOf(model.getPoints()));
@@ -98,9 +101,12 @@ public class AdminActivity extends AppCompatActivity {
                         Toast.makeText(AdminActivity.this, "Card clicked !", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AdminActivity.this,ApprovalsActivity.class);
                         Bundle bundle = new Bundle();
-                            bundle.putString("activity",activity);
+                        bundle.putString("activity",activity);
                         bundle.putInt("points",points);
                         bundle.putString("userid",userid);
+                        bundle.putLong("id",id);
+                        bundle.putString("activityKey",key);
+                        bundle.putString("activityKeyInMain",activityKeyInMain);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();

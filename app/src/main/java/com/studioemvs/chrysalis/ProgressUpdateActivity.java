@@ -41,7 +41,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     DatabaseReference mainRef,userRef;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
-    String userKey,activityCompleted,activity;
+    String userKey,activityCompleted,dateCompleted,userComments,keyUnderUserRecentNode;
     int pointsForActivity,prevPoints;
     Boolean approval = false;
     Calendar myCalendar;
@@ -86,11 +86,11 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, monthOfYear);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            updateLabel();
+            updateDate();
         }
 
     };
-    private void updateLabel() {
+    private void updateDate() {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
@@ -118,16 +118,20 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
                 if (user!=null){
                     userKey = user.getUid();
                     //updatePoints(pointsForActivity);
-                    submitActivityToAdmin(pointsForActivity,activityCompleted,approval);
-                    updateActInMain(pointsForActivity, activityCompleted,approval);
+                    dateCompleted = activityDate.getText().toString();
+                    userComments = comments.getText().toString();
+                    submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
+                    updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
                 }
+                break;
             case R.id.date_rslt_points:
                 new DatePickerDialog(ProgressUpdateActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                break;
         }
     }
 
@@ -157,27 +161,33 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         });*/
     }
 
-
-    private void submitActivityToAdmin(final int points, String activity,Boolean approval) {
+//updating in recent activity node under User main node
+    private void submitActivityToAdmin(final int points, String activity,Boolean approval,String activityDate,String userComments) {
         DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
-        String key = recRef.push().getKey();
+        keyUnderUserRecentNode = recRef.push().getKey();
         long id = System.currentTimeMillis();
         String userid = userKey;
         Log.d("progress update ", "submitActivityToAdmin: "+points+"activity: "+activity);
-        User.RecentActivity recentActivityInUser = new User.RecentActivity(activity,points,approval,id);
+        User.RecentActivity recentActivityInUser = new User.RecentActivity(activity,points,approval,id,activityDate,userComments);
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(userKey+"/"+"recentActivity/"+key, recentActivityInUser);
+        childUpdates.put(userKey+"/"+"recentActivity/"+keyUnderUserRecentNode, recentActivityInUser);
         userRef.updateChildren(childUpdates);
     }
 
-    private void updateActInMain(final int points, String activity,Boolean approval) {
+    //updating in the recent activity main node
+    private void updateActInMain(final int points, String activity,Boolean approval,String activityDate, String userComments,String activityKey) {
         DatabaseReference mainRecRef = mainRef.child("recentActivity");
         String mainRecKey = mainRecRef.push().getKey();
         long id = System.currentTimeMillis();
-        User.RecentActivity recentActivityInMain = new User.RecentActivity(userKey,activity,points,approval,id);
+        User.RecentActivity recentActivityInMain = new User.RecentActivity(userKey,activity,points,approval,id,activityDate,userComments,keyUnderUserRecentNode );
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(mainRecKey, recentActivityInMain);
         mainRecRef.updateChildren(childUpdates);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

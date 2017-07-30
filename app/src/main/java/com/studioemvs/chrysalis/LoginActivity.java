@@ -2,6 +2,7 @@ package com.studioemvs.chrysalis;
 
 import android.net.Uri;
 import android.os.Parcelable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -41,9 +43,10 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
-    Boolean adminState;
+    Boolean adminState,registrationState;
     String uid;
     VideoView videoBackground;
+    RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         login = (Button)findViewById(R.id.btn_Login);
         signup = (Button)findViewById(R.id.btn_signup);
         forgotPwd = (TextView)findViewById(R.id.forgotPassword);
+        relativeLayout = (RelativeLayout)findViewById(R.id.loginRelativeLayout);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,13 +91,24 @@ public class LoginActivity extends AppCompatActivity {
                     userRef.child(uid).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            User useData = dataSnapshot.getValue(User.class);
-                            adminState = useData.getAdmin();
-                            Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
-                            Bundle userBundle = new Bundle();
-                            userBundle.putString("uid",uid);
-                            intent.putExtras(userBundle);
-                            startActivity(intent);
+                            User userData = dataSnapshot.getValue(User.class);
+                            adminState =userData.getAdmin();
+                            registrationState = userData.getRegistrationApproved();
+                            if (registrationState){
+                                Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
+                                Bundle userBundle = new Bundle();
+                                userBundle.putBoolean("adminState",adminState);
+                                userBundle.putBoolean("registrationState",registrationState);
+                                userBundle.putString("uid",uid);
+                                intent.putExtras(userBundle);
+                                startActivity(intent);
+                            }else {
+                                Snackbar snackbar = Snackbar
+                                        .make(relativeLayout, "Registration not yet confirmed by admin", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+
+
                            // roleBasedCheck(adminState,uid);
                         }
 
@@ -129,24 +144,31 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         progressDialog.setMessage("Signing in");
         progressDialog.show();
-        mAuth.signInWithEmailAndPassword(email.getText().toString(), pwd.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                        progressDialog.hide();
+            mAuth.signInWithEmailAndPassword(email.getText().toString(), pwd.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                            progressDialog.hide();
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed."+task.getException(),
-                                    Toast.LENGTH_SHORT).show();
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithEmail", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed."+task.getException(),
+                                        Toast.LENGTH_SHORT).show();
+                                            Snackbar snackbar = Snackbar
+                    .make(relativeLayout, "Registration not yet confirmed by admin", Snackbar.LENGTH_LONG);
+            snackbar.show();
+            progressDialog.hide();
+                            }
                         }
-                    }
-                });
-    }
+                    });
+
+
+        }
+
 
 
 
