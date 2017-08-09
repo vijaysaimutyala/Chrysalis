@@ -91,10 +91,12 @@ public class RecentUpdatesActivity extends AppCompatActivity {
     private void getRecentActivity(final String userkey) {
         Toast.makeText(RecentUpdatesActivity.this, "Called recent activity", Toast.LENGTH_SHORT).show();
         activityQuery = userRef.child(userkey).child("recentActivity").orderByChild("id");
-        activityAdapter =new FirebaseRecyclerAdapter<User.RecentActivity, RecentUpdatesActivity.ActivityHolder>(User.RecentActivity.class,
-                R.layout.activity_recent_dummy,RecentUpdatesActivity.ActivityHolder.class,activityQuery) {
+        activityAdapter =new FirebaseRecyclerAdapter<User.RecentActivity, RecentUpdatesActivity.ActivityHolder>
+                (User.RecentActivity.class, R.layout.activity_recent_dummy,RecentUpdatesActivity.ActivityHolder.class,activityQuery) {
             @Override
-            protected void populateViewHolder(RecentUpdatesActivity.ActivityHolder viewHolder, User.RecentActivity model, int position) {
+            protected void populateViewHolder(RecentUpdatesActivity.ActivityHolder viewHolder,
+                                              User.RecentActivity model, int position) {
+                Log.d(TAG, "populateViewHolder: Reached here failing in getRecentActivity");
                 Boolean approvalStatus = model.getApproval();
                 viewHolder.activity.setText(model.getActivity());
                 viewHolder.cv.setRadius(2);

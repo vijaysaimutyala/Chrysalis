@@ -7,7 +7,9 @@
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tableActivityData">
+        android:id="@+id/tableActivityData"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
         <TableRow>
             <TextView
                 android:id="@+id/approve_username"
@@ -52,6 +54,38 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Vijay Sai"
+                android:textColor="@color/primary_text_material_light"/>
+        </TableRow>
+        <TableRow
+        android:layout_marginTop="10dp">
+        <TextView
+            android:id="@+id/approve_userComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/userComments" />
+
+        <TextView
+            android:id="@+id/approve_rslt_userComments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Comments"
+            android:textColor="@color/primary_text_material_light"/>
+    </TableRow>
+        <TableRow
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/approve_activityDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dateOfActivity" />
+
+            <TextView
+                android:id="@+id/approve_rslt_activityDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Date"
                 android:textColor="@color/primary_text_material_light"/>
         </TableRow>
         <TableRow

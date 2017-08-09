@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -42,7 +43,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     String userKey,activityCompleted,dateCompleted,userComments,keyUnderUserRecentNode;
-    int pointsForActivity,prevPoints;
+    int pointsForActivity,prevPointsToApprove;
     Boolean approval = false;
     Calendar myCalendar;
     EditText activityDate,comments;
@@ -117,11 +118,24 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
                 FirebaseUser user =  mAuth.getCurrentUser();
                 if (user!=null){
                     userKey = user.getUid();
+                    userRef.child(userKey).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User userdata = dataSnapshot.getValue(User.class);
+                            prevPointsToApprove = userdata.getChrysalisPointsToBeApproved();
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     //updatePoints(pointsForActivity);
                     dateCompleted = activityDate.getText().toString();
                     userComments = comments.getText().toString();
                     submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
                     updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
+                    updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
                     Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
@@ -135,10 +149,13 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void updatePoints(final int pointsForActivity) {
+
+    private void updateToBeApprovedPoints(final int pointsForActivity, int prevPointsToApprove) {
         //add points to already existing ones
-        userRef.child(userKey).child("chrysalisPoints").setValue(pointsForActivity+prevPoints);
-        prevPoints = pointsForActivity+prevPoints;
+        //userRef.child(userKey).child("chrysalisPoints").setValue(pointsForActivity+prevPoints);
+        int totalPointsToApprove = pointsForActivity+prevPointsToApprove;
+        userRef.child(userKey).child("chrysalisPointsToBeApproved").setValue(totalPointsToApprove);
+
 /*        userRef.child(userKey).runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -162,7 +179,8 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     }
 
 //updating in recent activity node under User main node
-    private void submitActivityToAdmin(final int points, String activity,Boolean approval,String activityDate,String userComments) {
+    private void submitActivityToAdmin(final int points, String activity,Boolean approval,String activityDate,
+                                       String userComments) {
         DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
         keyUnderUserRecentNode = recRef.push().getKey();
         long id = System.currentTimeMillis();

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,17 +24,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
-public class AdminActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "Admin Activity";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    RecyclerView toBeApproved;
-    FirebaseRecyclerAdapter<User.RecentActivity,ToApproveHolder> toApproveAdapter;
     DatabaseReference mainRef,userRef,recentActivityRef;
     String userKey;
     ProgressDialog progressDialog;
-    Query toApproveQuery;
-    Boolean approvalState;
+    Button registrationApproval,activityApproval;
 
 
 
@@ -48,11 +46,11 @@ public class AdminActivity extends AppCompatActivity {
         recentActivityRef = mainRef.child("recentActivity");
         userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
-
         progressDialog = new ProgressDialog(this);
-        toBeApproved = (RecyclerView)findViewById(R.id.approvalPending);
-        toBeApproved.setLayoutManager(new LinearLayoutManager(this));
-
+        registrationApproval = (Button)findViewById(R.id.approveRegistration);
+        activityApproval = (Button)findViewById(R.id.approveActivities);
+        registrationApproval.setOnClickListener(this);
+        activityApproval.setOnClickListener(this);
         checkAuthorization();
 
     }
@@ -65,9 +63,8 @@ public class AdminActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     userKey = user.getUid();
-                    progressDialog.setMessage("Fetching user data");
-                    progressDialog.show();
-                    getAppovalData(userKey);
+                    //progressDialog.setMessage("Fetching user data");
+                    //progressDialog.show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -76,68 +73,7 @@ public class AdminActivity extends AppCompatActivity {
         };
     }
 
-    private void getAppovalData(String userKey) {
-        toApproveQuery = recentActivityRef.orderByChild("approval").equalTo(false);
 
-        toApproveAdapter =  new FirebaseRecyclerAdapter<User.RecentActivity, ToApproveHolder>(User.RecentActivity.class,
-                R.layout.dummy_tobeapproved, ToApproveHolder.class,toApproveQuery) {
-            @Override
-            protected void populateViewHolder(ToApproveHolder viewHolder, User.RecentActivity model, int position) {
-                DatabaseReference activityRef =getRef(position);
-                final String activity = model.getActivity().toString();
-                final String userid = model.getUserid();
-                final int points = model.getPoints();
-                final Long id = model.getId();
-                final String key = activityRef.getKey();
-                final String activityKeyInMain = model.getActivityKey();
-
-                viewHolder.toapprove.setText(model.getActivity());
-                viewHolder.toapprovepoints.setText(String.valueOf(model.getPoints()));
-                approvalState = model.getApproval();
-                Log.d(TAG, "populateViewHolder: Activity:  "+model.getActivity()+"points: "+model.getPoints());
-                viewHolder.toApproveCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(AdminActivity.this, "Card clicked !", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(AdminActivity.this,ApprovalsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("activity",activity);
-                        bundle.putInt("points",points);
-                        bundle.putString("userid",userid);
-                        bundle.putLong("id",id);
-                        bundle.putString("activityKey",key);
-                        bundle.putString("activityKeyInMain",activityKeyInMain);
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-
-            }
-            @Override
-            public User.RecentActivity getItem(int position){
-                return super.getItem(getItemCount()-1-position);
-            }
-        };
-        toBeApproved.setAdapter(toApproveAdapter);
-        progressDialog.hide();
-
-    }
-
-    public static class ToApproveHolder extends RecyclerView.ViewHolder{
-        TextView toapprove,toapprovepoints;
-        CardView toApproveCardView;
-
-
-        public ToApproveHolder(View itemView) {
-            super(itemView);
-            toApproveCardView = (CardView)itemView.findViewById(R.id.toApproveCardView);
-            toapprove = (TextView)itemView.findViewById(R.id.txt_toapprove);
-            toapprovepoints = (TextView) itemView.findViewById(R.id.txt_toapprovepoints);
-
-        }
-    }
 
     @Override
     protected void onStart() {
@@ -174,6 +110,22 @@ public class AdminActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.approveRegistration:
+                Intent intentReg = new Intent(AdminActivity.this,NewRegistrationsListActivity.class);
+                startActivity(intentReg);
+                finish();
+                break;
+            case R.id.approveActivities:
+                Intent intent = new Intent(AdminActivity.this,UserActivitesApprovalListActivity.class);
+                startActivity(intent);
+                finish();
+                break;
         }
     }
 }

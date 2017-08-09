@@ -27,10 +27,10 @@
         <activity
             android:name=".UserAndStatusActivity"
             android:label="@string/title_activity_user_and_status"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".RecentUpdatesActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".RecentUpdatesActivity" />
+        <activity android:name=".UserActivitesApprovalListActivity" />
+        <activity android:name=".NewRegistrationsListActivity"></activity>
     </application>
 
 </manifest>

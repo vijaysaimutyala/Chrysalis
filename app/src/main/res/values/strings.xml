@@ -88,5 +88,11 @@
     <string name="infosysId">Infosys Mail Id</string>
     <string name="employeeId">Employee Id</string>
     <string name="infyId">yourid\@infosys.com</string>
+    <string name="userComments">User Comments</string>
+    <string name="toBeApprovedPoints">\u00A0 points are yet to be approved</string>
+    <string name="approveRegistration">Approve User Registrations</string>
+    <string name="approveActivities">Approve user activites</string>
+    <string name="apprvRegistration">Approve User</string>
+    <string name="rejectRegistration">Reject User </string>
 
 </resources>

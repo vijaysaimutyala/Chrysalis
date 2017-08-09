@@ -5,18 +5,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
     tools:context="com.studioemvs.chrysalis.AdminActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/toBeApproved"
-        android:text="@string/toBeApproved"
-        android:textSize="20sp"
-        android:textColor="@color/primary_text_material_light" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/approvalPending"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
-        android:layout_below="@id/toBeApproved" />
+        android:orientation="vertical"
+        android:weightSum="2">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/approveRegistration"
+            android:text="@string/approveRegistration"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/approveActivities"
+            android:text="@string/approveActivities"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+
     </RelativeLayout>

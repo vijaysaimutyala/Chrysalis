@@ -20,15 +20,15 @@ import org.w3c.dom.Text;
 import java.util.HashMap;
 
 public class ApprovalsActivity extends AppCompatActivity implements View.OnClickListener{
-    TextView username,activity,points;
+    TextView username,activity,points,commentsFromUser,activityDate;
     Button approve,reject;
     EditText comments;
     String activityToApprove,uidToApprove;
     DatabaseReference mainRef,userRef,recentActivityRef;
     ValueEventListener approveActivityListener;
-    int pointsToApprove,prevPoints;
+    int pointsToApprove,prevPoints,unApprovedPoints;
     Long activityId;
-    String activityKey,activityKeyInMain;
+    String activityKey,activityKeyInMain,userComments,userActivityDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +40,9 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
         points = (TextView)findViewById(R.id.approve_rslt_points);
         approve = (Button)findViewById(R.id.approveActivity);
         reject = (Button)findViewById(R.id.rejectActivity);
+        commentsFromUser = (TextView)findViewById(R.id.approve_rslt_userComments);
+        activityDate = (TextView)findViewById(R.id.approve_rslt_activityDate);
+
         comments = (EditText)findViewById(R.id.approve_comments);
         approve.setOnClickListener(this);
         reject.setOnClickListener(this);
@@ -55,10 +58,14 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
         activityId = bundle.getLong("id");
         activityKey = bundle.getString("activityKey");
         activityKeyInMain = bundle.getString("activityKeyInMain");
+        userComments = bundle.getString("userComments");
+        userActivityDate = bundle.getString("activityDate");
 
         points.setText(String.valueOf(pointsToApprove));
         activity.setText(activityToApprove);
         username.setText(uidToApprove);
+        commentsFromUser.setText(userComments);
+        activityDate.setText(userActivityDate);
     }
 
 
@@ -70,6 +77,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User userData = dataSnapshot.getValue(User.class);
                 prevPoints = userData.getChrysalisPoints();
+                unApprovedPoints = userData.getChrysalisPointsToBeApproved();
             }
 
             @Override
@@ -87,6 +95,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
                 Log.d("appoveActivity", "onClick: "+activityKeyInMain);
                 userRef.child(uidToApprove).child("chrysalisPoints").setValue(pointsToApprove+prevPoints);
                 userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approval").setValue(true);
+                userRef.child(uidToApprove).child("chrysalisPointsToBeApproved").setValue(unApprovedPoints - pointsToApprove);
                 Log.d("Approvals", "onClick: "+activityKey);
                 HashMap<String,Object> approveActivity = new HashMap<>();
                 approveActivity.put("approval",true);

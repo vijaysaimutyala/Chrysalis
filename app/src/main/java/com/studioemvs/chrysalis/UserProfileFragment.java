@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,13 +47,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
     String TAG ="User Profile Fragment";
-    String userKey,username,chrysLevel,chrysGroup,chrysPoints;
+    String userKey,username,chrysLevel,chrysGroup,chrysPoints,chrysSublevel,chrysalisPointsToBeApproved;
     Query userDataQuery,activityQuery;
     ImageView imageView;
     LineTextView infoForUser;
     ProgressDialog progressDialog;
     Button recentActivity;
-    TextView name,level,points,group;
+    TextView name,level,points,group,sublevel,pointsToGetApproval;
     Boolean adminState;
 
     public UserProfileFragment() {
@@ -83,6 +84,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         level = (TextView)rootView.findViewById(R.id.frag_chrysLevel);
         points = (TextView)rootView.findViewById(R.id.frag_chrysPoints);
         group = (TextView)rootView.findViewById(R.id.frag_chrysGroup);
+        sublevel = (TextView)rootView.findViewById(R.id.frag_chrysSublevel);
+        pointsToGetApproval = (TextView)rootView.findViewById(R.id.frag_toBeApprovedPoints);
         progressDialog = new ProgressDialog(this.getContext());
         infoForUser = (LineTextView)rootView.findViewById(R.id.frag_infoText);
         recentActivity = (Button)rootView.findViewById(R.id.recActivityBtn);
@@ -132,8 +135,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 adminState = userProfile.getAdmin();
                 username = userProfile.getUsername();
                 chrysLevel = userProfile.getChrysalisLevel();
+                chrysSublevel = userProfile.getChrysalisSublevel();
                 chrysGroup = userProfile.getChrysalisGroup();
                 chrysPoints = String.valueOf(userProfile.getChrysalisPoints());
+                chrysalisPointsToBeApproved = String.valueOf(userProfile.getChrysalisPointsToBeApproved());
 /*                Bundle dataToActivity = new Bundle();
                 dataToActivity.putBoolean("adminState",adminState);
                 Intent intent = getActivity().getIntent();
@@ -142,6 +147,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 level.setText(chrysLevel);
                 points.setText(chrysPoints);
                 group.setText(chrysGroup);
+                sublevel.setText(chrysSublevel);
+                pointsToGetApproval.setText(chrysalisPointsToBeApproved);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

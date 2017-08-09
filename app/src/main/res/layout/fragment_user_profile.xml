@@ -10,7 +10,9 @@
     android:src="@drawable/aai"
     android:id="@+id/background_image_view"
     android:adjustViewBounds="true"
-    android:scaleType="centerCrop"/>
+    android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -59,30 +61,80 @@
             android:textSize="20sp"
             android:layout_toEndOf="@id/trophy"/>
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/frag_chrysLevel"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chrysalis Member"
-        android:textSize="17sp"
         android:layout_below="@id/relPoints"
         android:layout_centerHorizontal="true"
-        android:textColor="@android:color/white"/>
+        android:id="@+id/relativeLayout">
+        <TextView
+            android:id="@+id/frag_chrysLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Chrysalis Member"
+            android:textSize="17sp"
+            android:textColor="@android:color/white"/>
+        <TextView
+            android:id="@+id/frag_chrysDash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" - "
+            android:textSize="17sp"
+            android:layout_toEndOf="@id/frag_chrysLevel"
+            android:textColor="@android:color/white"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/frag_chrysSublevel"
+            android:textSize="17sp"
+            android:text="1.1"
+            android:textColor="@android:color/white"
+            android:layout_toEndOf="@id/frag_chrysDash"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/frag_chrysGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="AI &amp; ML"
-        android:layout_below="@id/frag_chrysLevel"
-        android:layout_centerInParent="true"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_centerHorizontal="true" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relYetToApprove"
+        android:layout_below="@+id/frag_chrysGroup"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/frag_toBeApprovedPoints"
+            android:text="20"
+            android:textColor="@android:color/holo_green_light"
+            android:textStyle="bold"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toBeApprovedPointsLbl"
+            android:text="@string/toBeApprovedPoints"
+            android:layout_toEndOf="@id/frag_toBeApprovedPoints"
+            android:textColor="@android:color/white"
+            android:textSize="17sp"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
     <com.hanks.htextview.line.LineTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/frag_infoText"
-        android:layout_below="@id/frag_chrysGroup"
+        android:layout_below="@id/relYetToApprove"
         android:gravity="center_horizontal"
         android:layout_marginTop="5dp"
         android:paddingRight="10dp"
