@@ -110,10 +110,10 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
 
 
             }
-            @Override
+/*            @Override
             public User.RecentActivity getItem(int position){
                 return super.getItem(getItemCount()-1-position);
-            }
+            }*/
         };
         toBeApproved.setAdapter(toApproveAdapter);
         progressDialog.hide();

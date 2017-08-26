@@ -21,14 +21,14 @@ public  class User {
     String uid;
     RecentActivity recentActivity;
     Boolean registrationApproved;
-    String chrysalisSublevel;
+    //String chrysalisSublevel;
     int chrysalisPointsToBeApproved;
     int empid;
 
 
     public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup,
                 String chrysalisLevel, String personalProjects, Boolean admin, String uid,
-                Boolean registrationApproved, String chrysalisSublevel, int chrysalisPointsToBeApproved, int empid) {
+                Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
         this.emailid = emailid;
         this.username = username;
         this.chrysalisPoints = chrysalisPoints;
@@ -38,14 +38,14 @@ public  class User {
         this.admin = admin;
         this.uid = uid;
         this.registrationApproved = registrationApproved;
-        this.chrysalisSublevel = chrysalisSublevel;
+        //this.chrysalisSublevel = chrysalisSublevel;
         this.chrysalisPointsToBeApproved = chrysalisPointsToBeApproved;
         this.empid = empid;
     }
 
     public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup,
                 String chrysalisLevel, String personalProjects, Boolean admin, String uid, RecentActivity recentActivity,
-                Boolean registrationApproved, String chrysalisSublevel, int chrysalisPointsToBeApproved, int empid) {
+                Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
         this.emailid = emailid;
         this.username = username;
         this.chrysalisPoints = chrysalisPoints;
@@ -56,13 +56,9 @@ public  class User {
         this.uid = uid;
         this.recentActivity = recentActivity;
         this.registrationApproved = registrationApproved;
-        this.chrysalisSublevel = chrysalisSublevel;
+        //this.chrysalisSublevel = chrysalisSublevel;
         this.chrysalisPointsToBeApproved = chrysalisPointsToBeApproved;
         this.empid = empid;
-    }
-
-    public String getChrysalisSublevel() {
-        return chrysalisSublevel;
     }
 
     public int getChrysalisPointsToBeApproved() {
@@ -133,7 +129,7 @@ public  class User {
         result.put("uid",uid);
         result.put("empid",empid);
         result.put("registrationApproved",registrationApproved);
-        result.put("chrysalisSublevel",chrysalisSublevel);
+        //result.put("chrysalisSublevel",chrysalisSublevel);
 /*        result.put("userid",recentActivity.userid);
         result.put("activity",recentActivity.activity);
         result.put("points",recentActivity.points);*/

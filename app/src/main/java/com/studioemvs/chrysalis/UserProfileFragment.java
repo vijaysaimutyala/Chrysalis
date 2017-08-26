@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.vision.text.Text;
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,13 +50,17 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     DatabaseReference mainRef,userRef;
     String TAG ="User Profile Fragment";
     String userKey,username,chrysLevel,chrysGroup,chrysPoints,chrysSublevel,chrysalisPointsToBeApproved;
-    Query userDataQuery,activityQuery;
+    Query userDataQuery,activityQuery,newsQuery;
     ImageView imageView;
-    LineTextView infoForUser;
     ProgressDialog progressDialog;
-    Button recentActivity;
-    TextView name,level,points,group,sublevel,pointsToGetApproval;
+    Button recentActivity,adminDashboard;
+    TextView name,level,points,group,sublevel,pointsToGetApproval,infoForUser;
     Boolean adminState;
+    String sublevels []= {"1.1", "1.2","1.3","2.1","2.2","2.3","3.1","3.2","3.3"};
+    int reqPointsForJump [] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
+    RecyclerView userNews;
+    FirebaseRecyclerAdapter<NewsForUser,UserProfileFragment.NewsHolder> toApproveAdapter;
+
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -84,12 +90,18 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         level = (TextView)rootView.findViewById(R.id.frag_chrysLevel);
         points = (TextView)rootView.findViewById(R.id.frag_chrysPoints);
         group = (TextView)rootView.findViewById(R.id.frag_chrysGroup);
-        sublevel = (TextView)rootView.findViewById(R.id.frag_chrysSublevel);
+       // sublevel = (TextView)rootView.findViewById(R.id.frag_chrysSublevel);
         pointsToGetApproval = (TextView)rootView.findViewById(R.id.frag_toBeApprovedPoints);
         progressDialog = new ProgressDialog(this.getContext());
-        infoForUser = (LineTextView)rootView.findViewById(R.id.frag_infoText);
+        //infoForUser = (TextView)rootView.findViewById(R.id.frag_infoText);
         recentActivity = (Button)rootView.findViewById(R.id.recActivityBtn);
+        adminDashboard = (Button)rootView.findViewById(R.id.adminDashborad);
+        adminDashboard.setVisibility(View.INVISIBLE);
+        adminDashboard.setOnClickListener(this);
         recentActivity.setOnClickListener(this);
+       // userNews = (RecyclerView)rootView.findViewById(R.id.frag_infoText);
+//       infoForUser.setMovementMethod(new ScrollingMovementMethod());
+
 
         BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
@@ -97,7 +109,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         imageView.setImageBitmap(blurred);
 
         checkAuthorization();
-
         return rootView;
     }
     private void checkAuthorization() {
@@ -115,6 +126,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                     progressDialog.show();
                     getUserData(userKey);//settingtextView
                     progressDialog.hide();
+                    //getNews();
 
                 } else {
                     // User is signed out
@@ -135,7 +147,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 adminState = userProfile.getAdmin();
                 username = userProfile.getUsername();
                 chrysLevel = userProfile.getChrysalisLevel();
-                chrysSublevel = userProfile.getChrysalisSublevel();
+               // chrysSublevel = userProfile.getChrysalisSublevel();
                 chrysGroup = userProfile.getChrysalisGroup();
                 chrysPoints = String.valueOf(userProfile.getChrysalisPoints());
                 chrysalisPointsToBeApproved = String.valueOf(userProfile.getChrysalisPointsToBeApproved());
@@ -147,9 +159,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 level.setText(chrysLevel);
                 points.setText(chrysPoints);
                 group.setText(chrysGroup);
-                sublevel.setText(chrysSublevel);
+             //   sublevel.setText(chrysSublevel);
                 pointsToGetApproval.setText(chrysalisPointsToBeApproved);
+                adminButtonVisibility(adminState);
+
             }
+
+
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG, "onCancelled: "+databaseError);
@@ -158,6 +175,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     }
 
+    private void adminButtonVisibility(Boolean adminState) {
+        if (adminState){
+            adminDashboard.setVisibility(View.VISIBLE);
+        }else{
+            adminDashboard.setVisibility(View.GONE);
+        }
+    }
 
 
     @Override
@@ -229,6 +253,39 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 Intent recIntent = new Intent(getContext(),RecentUpdatesActivity.class);
                 startActivity(recIntent);
                 break;
+            case R.id.adminDashborad:
+                Intent adminIntent = new Intent(getContext(),AdminActivity.class);
+                startActivity(adminIntent);
+                break;
         }
+    }
+
+    public class NewsHolder extends RecyclerView.ViewHolder{
+        TextView news;
+        CardView newsCardView;
+        public NewsHolder(View itemView) {
+            super(itemView);
+            newsCardView = (CardView)itemView.findViewById(R.id.newsCardView);
+            news = (TextView)itemView.findViewById(R.id.newsText);
+        }
+    }
+
+    private void getNews() {
+        newsQuery = mainRef.child("news").orderByKey();
+        toApproveAdapter =  new FirebaseRecyclerAdapter<NewsForUser, UserProfileFragment.NewsHolder>(NewsForUser.class,
+                R.layout.dummy_news_for_user, UserProfileFragment.NewsHolder.class, newsQuery) {
+            @Override
+            protected void populateViewHolder(UserProfileFragment.NewsHolder viewHolder, NewsForUser model, int position) {
+                DatabaseReference userKeyRef =getRef(position);
+                viewHolder.news.setText(model.getNews());
+                Log.d(TAG, "populateViewHolder: "+model.getNews());
+            }
+            @Override
+            public NewsForUser getItem(int position){
+                return super.getItem(getItemCount()-1-position);
+            }
+        };
+        userNews.setAdapter(toApproveAdapter);
+
     }
 }

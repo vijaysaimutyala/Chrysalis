@@ -65,11 +65,6 @@ public class UserAndStatusActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.user_adminPage:
-                Bundle dataFromLoginPage = getIntent().getExtras();
-                Boolean adminState = dataFromLoginPage.getBoolean("adminState");
-                navigateToAdminPage(adminState);
-                return true;
             case R.id.usersignout:
                 FirebaseAuth.getInstance().signOut();
                 finish();

@@ -74,7 +74,7 @@
             android:text="Chrysalis Member"
             android:textSize="17sp"
             android:textColor="@android:color/white"/>
-        <TextView
+       <!-- <TextView
             android:id="@+id/frag_chrysDash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,7 +90,7 @@
             android:text="1.1"
             android:textColor="@android:color/white"
             android:layout_toEndOf="@id/frag_chrysDash"
-            android:textStyle="bold"/>
+            android:textStyle="bold"/>-->
 
     </RelativeLayout>
 
@@ -129,8 +129,15 @@
             android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>
+<!--    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/frag_infoText"
+        android:layout_below="@id/relYetToApprove">
 
-    <com.hanks.htextview.line.LineTextView
+    </android.support.v7.widget.RecyclerView>-->
+
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/frag_infoText"
@@ -141,14 +148,19 @@
         android:textColor="@android:color/black"
         android:text="You are 500 points away from becoming a Chrysalis coordinator"
         android:textSize="16sp"
-        app:animationDuration="3000"
         android:background="#ffffff"
-        app:lineColor="#ff0000"
-        app:lineWidth="4dp"/>
+        android:maxLines = "1"
+        android:scrollbars = "vertical"/>-->
 <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/frag_infoText"
+    android:layout_below="@id/relYetToApprove"
     android:id="@+id/recActivityBtn"
-    android:text="@string/recentActivity"/>
+    android:text="@string/recentActivity" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/adminDashborad"
+        android:text="@string/adminPage"
+        android:layout_below="@id/recActivityBtn"/>
 </RelativeLayout>

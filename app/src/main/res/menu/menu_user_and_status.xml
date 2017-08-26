@@ -2,8 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.studioemvs.chrysalis.UserAndStatusActivity">
-    <item android:id="@+id/user_adminPage"
-        android:title="@string/adminPage"/>
     <item android:id="@+id/usersignout"
         android:title="@string/signout" />
 </menu>

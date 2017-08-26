@@ -43,7 +43,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     String userKey,activityCompleted,dateCompleted,userComments,keyUnderUserRecentNode;
-    int pointsForActivity,prevPointsToApprove;
+    int pointsForActivity,prevPointsToApprove,globPrevPoints;
     Boolean approval = false;
     Calendar myCalendar;
     EditText activityDate,comments;
@@ -74,6 +74,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         activity.setOnItemSelectedListener(this);*/
         activityTxt.setText(activityCompleted);
         pointsTxt.setText(String.valueOf(pointsForActivity));
+        getPrevPoints();
         submitPoints.setOnClickListener(this);
         activityDate.setOnClickListener(this);
 
@@ -115,31 +116,14 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.submitActivity:
-                FirebaseUser user =  mAuth.getCurrentUser();
-                if (user!=null){
-                    userKey = user.getUid();
-                    userRef.child(userKey).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            User userdata = dataSnapshot.getValue(User.class);
-                            prevPointsToApprove = userdata.getChrysalisPointsToBeApproved();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                    //updatePoints(pointsForActivity);
-                    dateCompleted = activityDate.getText().toString();
-                    userComments = comments.getText().toString();
-                    submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
-                    updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
-                    updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
-                    Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(ProgressUpdateActivity.this, "No user is logged in", Toast.LENGTH_SHORT).show();
-                }
+                dateCompleted = activityDate.getText().toString();
+                userComments = comments.getText().toString();
+                //updatePoints(pointsForActivity);
+                submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
+                updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
+                updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
+                Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
+                finish();
                 break;
             case R.id.date_rslt_points:
                 new DatePickerDialog(ProgressUpdateActivity.this, date, myCalendar
@@ -149,11 +133,43 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         }
     }
 
+    private void getPrevPoints() {
+        FirebaseUser user =  mAuth.getCurrentUser();
+        if (user!=null){
+            userKey = user.getUid();
+            userRef.child(userKey).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Toast.makeText(ProgressUpdateActivity.this, "in onDatachange", Toast.LENGTH_SHORT).show();
+                    User userdata = dataSnapshot.getValue(User.class);
+                    prevPointsToApprove = userdata.getChrysalisPointsToBeApproved();
+                    savePrevPointsForUpdate(prevPointsToApprove);
+                    Log.d("SubmitActivity", "onDataChange: "+prevPointsToApprove);
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        Log.d("prevpoints", "savePrevPointsForUpdate: "+prevPointsToApprove);
+        globPrevPoints = prevPointsToApprove;
+    }else{
+            Toast.makeText(this, "User is not logged.Please logout and login to post activity", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void savePrevPointsForUpdate(int previousPoints) {
+        globPrevPoints = previousPoints;
+    }
+
 
     private void updateToBeApprovedPoints(final int pointsForActivity, int prevPointsToApprove) {
         //add points to already existing ones
         //userRef.child(userKey).child("chrysalisPoints").setValue(pointsForActivity+prevPoints);
         int totalPointsToApprove = pointsForActivity+prevPointsToApprove;
+        Log.d("Prevpoints", "updateToBeApprovedPoints: prevpoints"+prevPointsToApprove);
+        Log.d("pointsForActivity", "updateToBeApprovedPoints: "+pointsForActivity);
+        Log.d("UpdateToBeApproved", "updateToBeApprovedPoints: "+totalPointsToApprove);
         userRef.child(userKey).child("chrysalisPointsToBeApproved").setValue(totalPointsToApprove);
 
 /*        userRef.child(userKey).runTransaction(new Transaction.Handler() {

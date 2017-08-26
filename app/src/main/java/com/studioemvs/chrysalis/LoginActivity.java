@@ -81,6 +81,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
+        checkAuthorztion();
+    }
+
+    private void checkAuthorztion() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -109,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
 
-                           // roleBasedCheck(adminState,uid);
+                            // roleBasedCheck(adminState,uid);
                         }
 
                         @Override
@@ -141,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
     private void signIn() {
         progressDialog.setMessage("Signing in");
         progressDialog.show();
@@ -148,9 +153,8 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful()+task.getResult().toString());
                             progressDialog.hide();
-
                             // If sign in fails, display a message to the user. If sign in succeeds
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
@@ -158,16 +162,11 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.w(TAG, "signInWithEmail", task.getException());
                                 Toast.makeText(LoginActivity.this, "Authentication failed."+task.getException(),
                                         Toast.LENGTH_SHORT).show();
-                                            Snackbar snackbar = Snackbar
-                    .make(relativeLayout, "Registration not yet confirmed by admin", Snackbar.LENGTH_LONG);
-            snackbar.show();
-            progressDialog.hide();
+                                progressDialog.hide();
                             }
                         }
                     });
-
-
-        }
+    }
 
 
 
