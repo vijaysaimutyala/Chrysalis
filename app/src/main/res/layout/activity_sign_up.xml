@@ -38,15 +38,16 @@
         android:hint="@string/employeeId"
         android:inputType="number"
         android:imeOptions="actionNext"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:maxLength="6"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edt_signup_email"
-        android:hint="@string/infyId"
         android:inputType="textEmailAddress"
         android:imeOptions="actionNext"
         android:maxLines="1"
+        android:text="@string/infyId"
         android:layout_below="@id/signup_empId"
         android:layout_alignParentStart="true" />
     <android.support.v7.widget.AppCompatSpinner
@@ -91,7 +92,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_signup_signup"
         android:text="@string/signUp"
-        android:layout_below="@+id/edt_signup_confirm_password" />
+        android:layout_below="@+id/edt_signup_confirm_password"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"/>
 
 </RelativeLayout>
 </ScrollView>

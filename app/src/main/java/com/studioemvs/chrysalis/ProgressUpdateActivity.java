@@ -2,8 +2,10 @@ package com.studioemvs.chrysalis;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,12 +46,13 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     String userKey,activityCompleted,dateCompleted,userComments,keyUnderUserRecentNode;
-    int pointsForActivity,prevPointsToApprove,globPrevPoints;
+    String approvedBy = "",adminComments = "";
+    int pointsForActivity,prevPointsToApprove,globPrevPoints,empid,globEmpId;
     Boolean approval = false;
     Calendar myCalendar;
     EditText activityDate,comments;
     TextView activityTxt,pointsTxt;
-
+    RelativeLayout relLayout;
 
 
     @Override
@@ -67,6 +71,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         pointsTxt = (TextView)findViewById(R.id.update_rslt_points);
         activityDate = (EditText)findViewById(R.id.date_rslt_points);
         comments = (EditText)findViewById(R.id.update_comments);
+        relLayout = (RelativeLayout)findViewById(R.id.updateRelActivity);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.activities, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -119,11 +124,18 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
                 dateCompleted = activityDate.getText().toString();
                 userComments = comments.getText().toString();
                 //updatePoints(pointsForActivity);
-                submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
-                updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
-                updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
-                Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
-                finish();
+                if (dateCompleted.length() !=0){
+                    submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
+                    updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
+                    updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
+                    Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    Snackbar dateBar = Snackbar.make(relLayout,"Please enter the activity date",Snackbar.LENGTH_SHORT);
+                    dateBar.setActionTextColor(Color.RED);
+                    dateBar.show();
+                }
+
                 break;
             case R.id.date_rslt_points:
                 new DatePickerDialog(ProgressUpdateActivity.this, date, myCalendar
@@ -142,8 +154,9 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Toast.makeText(ProgressUpdateActivity.this, "in onDatachange", Toast.LENGTH_SHORT).show();
                     User userdata = dataSnapshot.getValue(User.class);
+                    empid = userdata.getEmpid();
                     prevPointsToApprove = userdata.getChrysalisPointsToBeApproved();
-                    savePrevPointsForUpdate(prevPointsToApprove);
+                    savePrevPointsForUpdate(prevPointsToApprove,empid);
                     Log.d("SubmitActivity", "onDataChange: "+prevPointsToApprove);
                 }
                 @Override
@@ -158,8 +171,9 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void savePrevPointsForUpdate(int previousPoints) {
+    private void savePrevPointsForUpdate(int previousPoints,int empid) {
         globPrevPoints = previousPoints;
+        globEmpId =empid;
     }
 
 
@@ -202,7 +216,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         long id = System.currentTimeMillis();
         String userid = userKey;
         Log.d("progress update ", "submitActivityToAdmin: "+points+"activity: "+activity);
-        User.RecentActivity recentActivityInUser = new User.RecentActivity(activity,points,approval,id,activityDate,userComments);
+        User.RecentActivity recentActivityInUser = new User.RecentActivity(activity,points,approval,id,activityDate,userComments,globEmpId,approvedBy,adminComments);
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(userKey+"/"+"recentActivity/"+keyUnderUserRecentNode, recentActivityInUser);
         userRef.updateChildren(childUpdates);
@@ -213,7 +227,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         DatabaseReference mainRecRef = mainRef.child("recentActivity");
         String mainRecKey = mainRecRef.push().getKey();
         long id = System.currentTimeMillis();
-        User.RecentActivity recentActivityInMain = new User.RecentActivity(userKey,activity,points,approval,id,activityDate,userComments,keyUnderUserRecentNode );
+        User.RecentActivity recentActivityInMain = new User.RecentActivity(userKey,activity,points,approval,id,activityDate,userComments,keyUnderUserRecentNode,globEmpId,approvedBy,adminComments);
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(mainRecKey, recentActivityInMain);
         mainRecRef.updateChildren(childUpdates);

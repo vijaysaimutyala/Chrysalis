@@ -79,6 +79,7 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
                 final String userid = model.getUserid();
                 final int points = model.getPoints();
                 final Long id = model.getId();
+                final int empid = model.getEmpid();
                 final String key = activityRef.getKey();
                 final String activityKeyInMain = model.getActivityKey();
                 final String userComments = model.getUserComments();
@@ -102,6 +103,7 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
                         bundle.putString("userComments",userComments);
                         bundle.putString("activityKeyInMain",activityKeyInMain);
                         bundle.putString("activityDate",activityDate);
+                        bundle.putInt("empid",empid);
                         intent.putExtras(bundle);
                         startActivity(intent);
                         finish();

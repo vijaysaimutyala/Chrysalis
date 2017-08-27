@@ -3,12 +3,13 @@
     package="com.studioemvs.chrysalis">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_butterflyappicon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_butterflyappicon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
@@ -30,7 +31,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".RecentUpdatesActivity" />
         <activity android:name=".UserActivitesApprovalListActivity" />
-        <activity android:name=".NewRegistrationsListActivity"></activity>
+        <activity android:name=".NewRegistrationsListActivity" />
+        <activity android:name=".PasswordResetActivity"></activity>
     </application>
 
 </manifest>

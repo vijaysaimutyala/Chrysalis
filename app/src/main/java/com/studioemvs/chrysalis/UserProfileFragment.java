@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -40,8 +44,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.hanks.htextview.line.LineTextView;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
+import static com.studioemvs.chrysalis.R.drawable.elon;
 
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener{
@@ -51,7 +60,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     String TAG ="User Profile Fragment";
     String userKey,username,chrysLevel,chrysGroup,chrysPoints,chrysSublevel,chrysalisPointsToBeApproved;
     Query userDataQuery,activityQuery,newsQuery;
-    ImageView imageView;
+    ImageView imageView,profilePic;
     ProgressDialog progressDialog;
     Button recentActivity,adminDashboard;
     TextView name,level,points,group,sublevel,pointsToGetApproval,infoForUser;
@@ -59,8 +68,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     String sublevels []= {"1.1", "1.2","1.3","2.1","2.2","2.3","3.1","3.2","3.3"};
     int reqPointsForJump [] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
     RecyclerView userNews;
+    SharedPreferences imagePref;
     FirebaseRecyclerAdapter<NewsForUser,UserProfileFragment.NewsHolder> toApproveAdapter;
-
+    private static final int SELECT_PICTURE = 100;
+    String mImageUri;
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -74,7 +85,52 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Uri defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/drawable/elon");
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        mImageUri = preferences.getString("profilepicUri", defaultImage.toString());
+    }
+    /* Choose an image from Gallery */
+    void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                // Get the url from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // Get the path from the Uri
+                    String path = getPathFromURI(selectedImageUri);
+                    Log.i(TAG, "Image Path : " + path);
+                    // Set the image in ImageView
+                    // Saves image URI as string to Default Shared Preferences
+                    SharedPreferences preferences =
+                            PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("image", String.valueOf(selectedImageUri));
+                    editor.commit();
+                    profilePic.setImageURI(selectedImageUri);
+                }
+            }
+        }
+    }
+
+    /* Get the real path from the URI */
+    public String getPathFromURI(Uri contentUri) {
+        String res = null;
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, proj, null, null, null);
+        if (cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            res = cursor.getString(column_index);
+        }
+        cursor.close();
+        return res;
     }
 
     @Override
@@ -82,6 +138,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
@@ -90,7 +147,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         level = (TextView)rootView.findViewById(R.id.frag_chrysLevel);
         points = (TextView)rootView.findViewById(R.id.frag_chrysPoints);
         group = (TextView)rootView.findViewById(R.id.frag_chrysGroup);
-       // sublevel = (TextView)rootView.findViewById(R.id.frag_chrysSublevel);
+        profilePic = (ImageView)rootView.findViewById(R.id.profile_image);
+        profilePic.setOnClickListener(this);
+
+        // sublevel = (TextView)rootView.findViewById(R.id.frag_chrysSublevel);
         pointsToGetApproval = (TextView)rootView.findViewById(R.id.frag_toBeApprovedPoints);
         progressDialog = new ProgressDialog(this.getContext());
         //infoForUser = (TextView)rootView.findViewById(R.id.frag_infoText);
@@ -99,7 +159,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         adminDashboard.setVisibility(View.INVISIBLE);
         adminDashboard.setOnClickListener(this);
         recentActivity.setOnClickListener(this);
-       // userNews = (RecyclerView)rootView.findViewById(R.id.frag_infoText);
+        // userNews = (RecyclerView)rootView.findViewById(R.id.frag_infoText);
 //       infoForUser.setMovementMethod(new ScrollingMovementMethod());
 
 
@@ -107,6 +167,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         Bitmap bitmap = drawable.getBitmap();
         Bitmap blurred = blurRenderScript(bitmap,7);
         imageView.setImageBitmap(blurred);
+
+        profilePic.setImageURI(Uri.parse(mImageUri));
 
         checkAuthorization();
         return rootView;
@@ -256,6 +318,9 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             case R.id.adminDashborad:
                 Intent adminIntent = new Intent(getContext(),AdminActivity.class);
                 startActivity(adminIntent);
+                break;
+            case R.id.profile_image:
+                openImageChooser();
                 break;
         }
     }

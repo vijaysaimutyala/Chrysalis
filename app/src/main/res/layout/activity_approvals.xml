@@ -17,7 +17,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/username"/>
             <TextView
-                android:id="@+id/approve_rslt_username"
+                android:id="@+id/approve_rslt_empId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

@@ -120,7 +120,7 @@ public  class User {
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
         result.put("emailid",emailid);
-        result.put("username",username);
+        result.put("empId",username);
         result.put("chrysalisPoints",chrysalisPoints);
         result.put("chrysalisGroup",chrysalisGroup);
         result.put("chrysalisLevel",chrysalisLevel);
@@ -145,35 +145,29 @@ public  class User {
         String activityDate;
         String userComments;
         String activityKey;
+        int empid;
+        String approvedBy;
+        String adminComments;
 
         public RecentActivity() {
         }
 
 
 
-        public RecentActivity(String userid, String activity, int points,
-                              String activityDate, String userComments, String activityKey) {
-            this.userid = userid;
-            this.activity = activity;
-            this.points = points;
-            this.activityDate = activityDate;
-            this.userComments = userComments;
-            this.activityKey = activityKey;
-        }
-
-        public RecentActivity(String activity, int points, Boolean approval, Long id, String activityDate,
-                              String userComments) {
+        public RecentActivity(String activity, int points, Boolean approval, Long id, String activityDate, String userComments, int empid, String approvedBy,String adminComments) {
             this.activity = activity;
             this.points = points;
             this.approval = approval;
             this.id = id;
             this.activityDate = activityDate;
             this.userComments = userComments;
+            this.empid = empid;
+            this.approvedBy = approvedBy;
+            this.adminComments = adminComments;
         }
 
 
-        public RecentActivity(String userid, String activity, int points, Boolean approval,
-                              Long id, String activityDate, String userComments, String activityKey) {
+        public RecentActivity(String userid, String activity, int points, Boolean approval, Long id, String activityDate, String userComments, String activityKey, int empid, String approvedBy,String adminComments) {
             this.userid = userid;
             this.activity = activity;
             this.points = points;
@@ -182,18 +176,21 @@ public  class User {
             this.activityDate = activityDate;
             this.userComments = userComments;
             this.activityKey = activityKey;
-
+            this.empid = empid;
+            this.approvedBy = approvedBy;
+            this.adminComments = adminComments;
         }
 
-        public RecentActivity(String userid, String activity, int points, Boolean approval,
-                              Long id, String activityDate, String userComments) {
-            this.userid = userid;
-            this.activity = activity;
-            this.points = points;
-            this.approval = approval;
-            this.id = id;
-            this.activityDate = activityDate;
-            this.userComments = userComments;
+        public String getAdminComments() {
+            return adminComments;
+        }
+
+        public String getApprovedBy() {
+            return approvedBy;
+        }
+
+        public int getEmpid() {
+            return empid;
         }
 
         public String getUserComments() {
@@ -237,9 +234,13 @@ public  class User {
             result.put("points", points);
             result.put("approval",approval);
             result.put("id", id);
+            result.put("empid",empid);
             result.put("activityDate",activityDate);
             result.put("userComments", userComments);
             result.put("activityKey",activityKey);
+            result.put("approvedBy",approvedBy);
+            result.put("adminComments",adminComments);
+
             return result;
         }
     }

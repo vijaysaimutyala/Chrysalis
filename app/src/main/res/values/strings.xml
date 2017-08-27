@@ -94,5 +94,10 @@
     <string name="approveActivities">Approve user activites</string>
     <string name="apprvRegistration">Approve User</string>
     <string name="rejectRegistration">Reject User </string>
+    <string name="ResetPassword">Reset Password</string>
+    <string name="newPassword">New Password</string>
+    <string name="confirmPassword">Confirm Password</string>
+    <string name="Submit">Reset</string>
+    <string name="regEmail">Enter your registered email</string>
 
 </resources>
