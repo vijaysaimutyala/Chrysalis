@@ -120,7 +120,7 @@ public  class User {
     public Map<String,Object> toMap(){
         HashMap<String,Object> result = new HashMap<>();
         result.put("emailid",emailid);
-        result.put("empId",username);
+        result.put("username",username);
         result.put("chrysalisPoints",chrysalisPoints);
         result.put("chrysalisGroup",chrysalisGroup);
         result.put("chrysalisLevel",chrysalisLevel);

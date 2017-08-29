@@ -89,7 +89,7 @@ public class NewRegistrationsListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(NewRegistrationsListActivity.this, "approve clicked !", Toast.LENGTH_SHORT).show();
-                        userRef.child(userKey).child("registrationApproved").setValue(true);
+                        userRef.child(key).child("registrationApproved").setValue(true);
                     }
                 });
                 viewHolder.reject.setOnClickListener(new View.OnClickListener() {

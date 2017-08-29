@@ -62,7 +62,8 @@
                 android:hint="@string/dateOfActivity"
                 android:focusable="false"
                 android:textSize="15sp"
-                android:textColor="@color/primary_text_material_light"/>
+                android:textColor="@color/primary_text_material_light"
+                android:textColorHint="@color/hinttext"/>
            </TableRow>
         <TableRow
             android:layout_marginTop="10dp">
@@ -74,7 +75,8 @@
                 android:layout_weight="1"
                 android:hint="@string/comments"
                 android:gravity="top|left"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:textColorHint="@color/hinttext"/>
         </TableRow>
     </TableLayout>
 

@@ -208,6 +208,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 Log.d(TAG, "userprofile fragments: "+userProfile);
                 adminState = userProfile.getAdmin();
                 username = userProfile.getUsername();
+
                 chrysLevel = userProfile.getChrysalisLevel();
                // chrysSublevel = userProfile.getChrysalisSublevel();
                 chrysGroup = userProfile.getChrysalisGroup();
