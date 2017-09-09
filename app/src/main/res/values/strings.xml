@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Chrysalis</string>
-    <string name="Email">Email</string>
+    <string name="Email">Infosys Mail Id</string>
     <string name="password">Password</string>
     <string name="Login">Login</string>
     <string name="signUp">Sign Up</string>
@@ -70,7 +70,7 @@
     <string name="adminUser">Me as User</string>
     <string name="username">Username</string>
     <string name="activity">Activity</string>
-    <string name="points">Points</string>
+    <string name="actPoints">Points</string>
     <string name="approve">Approve</string>
     <string name="reject">Reject</string>
     <string name="comments">Comments if any...</string>
@@ -99,5 +99,19 @@
     <string name="confirmPassword">Confirm Password</string>
     <string name="Submit">Reset</string>
     <string name="regEmail">Enter your registered email</string>
+    <string name="editUpdateActivities">Edit, Update and Delete Activities</string>
+    <string name="title_activity_admin_edit_add_update">Edit and Add Activities</string>
+    <string name="activityName">Activity Name</string>
+    <string name="activityPnts">Activity Points</string>
+    <string name="addActivity">Add Activity</string>
+    <string name="submitActivity">Submit Activity</string>
+    <string name="activityDetails">Activity Details</string>
+    <string name="resubmit">Resubmit</string>
+    <string name="delete">Delete Activity</string>
+    <string name="adminComments">Admin Comments</string>
+    <string name="rejecttext">Your activity has been rejected by admin with above comments. Please resubmit the activity with the comments suggested by admin.</string>
+    <string name="adminId">Approved/\nRejected by</string>
+    <string name="approvalStatus">Approval Status</string>
+    <string name="deleteActivity">Delete Activity</string>
 
 </resources>

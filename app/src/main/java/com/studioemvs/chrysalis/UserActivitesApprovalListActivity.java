@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.studioemvs.chrysalis.models.User;
 
 public class UserActivitesApprovalListActivity extends AppCompatActivity {
     private static final String TAG = "activity Approvals List";
@@ -30,7 +30,7 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
     String userKey;
     ProgressDialog progressDialog;
     Query toApproveQuery;
-    Boolean approvalState;
+    String approvalState;
 
 
     @Override
@@ -68,7 +68,7 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
         };
     }
     private void getAppovalData(String userKey) {
-        toApproveQuery = recentActivityRef.orderByChild("approval").equalTo(false);
+        toApproveQuery = recentActivityRef.orderByChild("approval").equalTo("no");
 
         toApproveAdapter =  new FirebaseRecyclerAdapter<User.RecentActivity, ToApproveHolder>(User.RecentActivity.class,
                 R.layout.dummy_tobeapproved, ToApproveHolder.class,toApproveQuery) {
@@ -88,16 +88,16 @@ public class UserActivitesApprovalListActivity extends AppCompatActivity {
                 viewHolder.toapprove.setText(model.getActivity());
                 viewHolder.toapprovepoints.setText(String.valueOf(model.getPoints()));
                 approvalState = model.getApproval();
-                Log.d(TAG, "populateViewHolder: Activity:  "+model.getActivity()+"points: "+model.getPoints());
+                Log.d(TAG, "populateViewHolder: Activity:  "+model.getActivity()+"actPoints: "+model.getPoints());
                 viewHolder.toApproveCardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(UserActivitesApprovalListActivity.this, "Card clicked !", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(UserActivitesApprovalListActivity.this,ApprovalsActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("activity",activity);
-                        bundle.putInt("points",points);
+                        bundle.putInt("actPoints",points);
                         bundle.putString("userid",userid);
+                        bundle.putString("approvalState",approvalState);
                         bundle.putLong("id",id);
                         bundle.putString("activityKey",key);
                         bundle.putString("userComments",userComments);

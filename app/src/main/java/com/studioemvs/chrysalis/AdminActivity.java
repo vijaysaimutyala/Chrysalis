@@ -31,7 +31,7 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
     DatabaseReference mainRef,userRef,recentActivityRef;
     String userKey;
     ProgressDialog progressDialog;
-    Button registrationApproval,activityApproval;
+    Button registrationApproval,activityApproval,addActivity;
 
 
 
@@ -49,8 +49,10 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
         progressDialog = new ProgressDialog(this);
         registrationApproval = (Button)findViewById(R.id.approveRegistration);
         activityApproval = (Button)findViewById(R.id.approveActivities);
+        addActivity = (Button)findViewById(R.id.editUpdateActivities);
         registrationApproval.setOnClickListener(this);
         activityApproval.setOnClickListener(this);
+        addActivity.setOnClickListener(this);
         checkAuthorization();
 
     }
@@ -126,6 +128,15 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.editUpdateActivities:
+                Intent addActIntent = new Intent(AdminActivity.this,AdminEditAddUpdateActivity.class);
+                Bundle adminbundle = new Bundle();
+                adminbundle.putString("adminkey",userKey);
+                addActIntent.putExtras(adminbundle);
+                startActivity(addActIntent);
+                finish();
+                break;
+
         }
     }
 }

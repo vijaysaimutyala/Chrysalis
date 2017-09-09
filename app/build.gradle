@@ -45,6 +45,9 @@ dependencies {
     compile 'ru.egslava:blurredview:1.0'
     compile 'com.hanks:htextview-base:0.1.1'
     compile 'com.hanks:htextview-line:0.1.1'
+    compile 'com.google.firebase:firebase-storage:11.0.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'

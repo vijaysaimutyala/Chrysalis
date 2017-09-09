@@ -17,7 +17,7 @@ public class RedeemPointsActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redeem_points);
         Bundle bundle = getIntent().getExtras();
-        totalPoints = bundle.getInt("points");
+        totalPoints = bundle.getInt("actPoints");
 
         redeemPoints = (EditText)findViewById(R.id.edt_redeemPoints);
         redeem = (Button)findViewById(R.id.btn_redeemPoints);

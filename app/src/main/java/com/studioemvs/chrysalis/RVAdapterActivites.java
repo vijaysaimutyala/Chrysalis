@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.studioemvs.chrysalis.models.ActivityPointsBean;
+
 import java.util.List;
 
 /**
@@ -38,7 +40,7 @@ public class RVAdapterActivites extends RecyclerView.Adapter<RVAdapterActivites.
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 Intent actIntent = new Intent(view.getContext(),ProgressUpdateActivity.class);
-                bundle.putInt("points",activityList.get(position).points);
+                bundle.putInt("actPoints",activityList.get(position).points);
                 bundle.putString("activity",activityList.get(position).activity);
                 actIntent.putExtras(bundle);
                 view.getContext().startActivity(actIntent);

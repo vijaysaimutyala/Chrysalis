@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.studioemvs.chrysalis.models.User;
 
 import java.util.HashMap;
 
@@ -28,7 +29,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
     ValueEventListener approveActivityListener;
     int pointsToApprove,prevPoints,unApprovedPoints,employeeId;
     Long activityId;
-    String activityKey,activityKeyInMain,userComments,userActivityDate,adminKey,adminCommentsText;
+    String activityKey,activityKeyInMain,userComments,userActivityDate,adminKey,adminCommentsText,approvalState;
     FirebaseAuth mAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
     @Override
@@ -55,7 +56,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
         userRef = mainRef.child("users");
 
         Bundle bundle = getIntent().getExtras();
-        pointsToApprove = bundle.getInt("points");
+        pointsToApprove = bundle.getInt("actPoints");
         activityToApprove = bundle.getString("activity");
         uidToApprove = bundle.getString("userid");
         activityId = bundle.getLong("id");
@@ -64,6 +65,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
         userComments = bundle.getString("userComments");
         userActivityDate = bundle.getString("activityDate");
         employeeId = bundle.getInt("empid");
+        approvalState = bundle.getString("approvalState");
 
         points.setText(String.valueOf(pointsToApprove));
         activity.setText(activityToApprove);
@@ -103,7 +105,7 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
                 adminCommentsText = comments.getText().toString();
                 Log.d("appoveActivity", "onClick: "+activityKeyInMain);
                 userRef.child(uidToApprove).child("chrysalisPoints").setValue(pointsToApprove+prevPoints);
-                userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approval").setValue(true);
+                userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approval").setValue("yes");
                 userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approvedBy").setValue(adminKey);
                 userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("adminComments").setValue(adminCommentsText);
                 userRef.child(uidToApprove).child("chrysalisPointsToBeApproved").setValue(unApprovedPoints - pointsToApprove);
@@ -120,8 +122,13 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
                 adminCommentsText = comments.getText().toString();
                 if (adminCommentsText.length() != 0){
                     userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("adminComments").setValue(adminCommentsText);
+                    userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approval").setValue("rejected");
+                    userRef.child(uidToApprove).child("recentActivity").child(activityKeyInMain).child("approvedBy").setValue(adminKey);
+                    userRef.child(uidToApprove).child("chrysalisPointsToBeApproved").setValue(unApprovedPoints - pointsToApprove);
                     HashMap<String,Object> rejectActivity = new HashMap<>();
                     rejectActivity.put("adminComments",adminCommentsText);
+                    rejectActivity.put("approval","rejected");
+                    rejectActivity.put("approvedBy",adminKey);
                     recentActivityRef.child(activityKey).updateChildren(rejectActivity);
                     finish();
                 }else{

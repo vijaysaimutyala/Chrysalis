@@ -1,22 +1,17 @@
 package com.studioemvs.chrysalis;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringDef;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,17 +21,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.ServerValue;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.studioemvs.chrysalis.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 
 public class ProgressUpdateActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,7 +40,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     String userKey,activityCompleted,dateCompleted,userComments,keyUnderUserRecentNode;
     String approvedBy = "",adminComments = "";
     int pointsForActivity,prevPointsToApprove,globPrevPoints,empid,globEmpId;
-    Boolean approval = false;
+    String approval = "no";
     Calendar myCalendar;
     EditText activityDate,comments;
     TextView activityTxt,pointsTxt;
@@ -60,7 +52,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_progress_update);
         Bundle bundle = getIntent().getExtras();
-        pointsForActivity = bundle.getInt("points");
+        pointsForActivity = bundle.getInt("actPoints");
         activityCompleted = bundle.getString("activity");
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
@@ -107,7 +99,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String actPoints = String.valueOf(activityPoints[i]);
-        points.setText(actPoints);
+        actPoints.setText(actPoints);
         pointsForActivity = Integer.parseInt(actPoints);
         activityCompleted = activity.getSelectedItem().toString();
     }
@@ -178,7 +170,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
 
 
     private void updateToBeApprovedPoints(final int pointsForActivity, int prevPointsToApprove) {
-        //add points to already existing ones
+        //add actPoints to already existing ones
         //userRef.child(userKey).child("chrysalisPoints").setValue(pointsForActivity+prevPoints);
         int totalPointsToApprove = pointsForActivity+prevPointsToApprove;
         Log.d("Prevpoints", "updateToBeApprovedPoints: prevpoints"+prevPointsToApprove);
@@ -209,7 +201,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     }
 
 //updating in recent activity node under User main node
-    private void submitActivityToAdmin(final int points, String activity,Boolean approval,String activityDate,
+    private void submitActivityToAdmin(final int points, String activity,String approval,String activityDate,
                                        String userComments) {
         DatabaseReference recRef = userRef.child(userKey+"/recentActivity");
         keyUnderUserRecentNode = recRef.push().getKey();
@@ -223,7 +215,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
     }
 
     //updating in the recent activity main node
-    private void updateActInMain(final int points, String activity,Boolean approval,String activityDate, String userComments,String activityKey) {
+    private void updateActInMain(final int points, String activity,String approval,String activityDate, String userComments,String activityKey) {
         DatabaseReference mainRecRef = mainRef.child("recentActivity");
         String mainRecKey = mainRecRef.push().getKey();
         long id = System.currentTimeMillis();

@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.studioemvs.chrysalis.models.User;
 
 public class RecentUpdatesActivity extends AppCompatActivity {
     RecyclerView recentActivity;
@@ -32,6 +33,7 @@ public class RecentUpdatesActivity extends AppCompatActivity {
     TextView name,level,points,group;
     ProgressDialog progressDialog;
     FirebaseRecyclerAdapter<User.RecentActivity,RecentUpdatesActivity.ActivityHolder> activityAdapter;
+    String act,actpoints,actdate,actadminId,actadminComments,actkey,actapproval;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +57,12 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Toast.makeText(getApplicationContext(), "User" +user.getEmail()+"is logged in!", Toast.LENGTH_SHORT).show();
                     userKey = user.getUid();
                     Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
                     progressDialog.setMessage("Fetching user data");
                     progressDialog.show();
                     //getUserData(userKey);//settingtextView
                     getRecentActivity(userKey);//settingRecentActivities
-                    Toast.makeText(RecentUpdatesActivity.this, "Called recent activity"+userKey, Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Intent intent = new Intent(RecentUpdatesActivity.this,LoginActivity.class);
@@ -95,18 +95,44 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                 (User.RecentActivity.class, R.layout.activity_recent_dummy,RecentUpdatesActivity.ActivityHolder.class,activityQuery) {
             @Override
             protected void populateViewHolder(RecentUpdatesActivity.ActivityHolder viewHolder,
-                                              User.RecentActivity model, int position) {
-                Log.d(TAG, "populateViewHolder: Reached here failing in getRecentActivity");
-                Boolean approvalStatus = model.getApproval();
+                                              final User.RecentActivity model, int position) {
+                actapproval = model.getApproval().toString();
+                act = model.getActivity().toString();
+                actpoints = String.valueOf(model.getPoints());
+                actadminComments = model.getAdminComments().toString();
+                actadminId = model.getApprovedBy().toString();
+                actdate = model.getActivityDate().toString();
+                //actkey = model.getActivityKey().toString();
+                Log.d(TAG, "populateViewHolder: "+act+actapproval+actadminId+actadminComments);
+                if (actapproval.equals("no")){
+                    viewHolder.cv.setCardBackgroundColor(Color.parseColor("#ff6f00"));
+                }else if(actapproval.equals("yes")){
+                    viewHolder.cv.setCardBackgroundColor(Color.parseColor("#00c853"));
+                }else if (actapproval.equals("rejected")){
+                    viewHolder.cv.setCardBackgroundColor(Color.parseColor("#ff0000"));
+                }
                 viewHolder.activity.setText(model.getActivity());
                 viewHolder.cv.setRadius(2);
                 viewHolder.points.setText(String.valueOf(model.getPoints()));
                 Log.d(TAG, "populateViewHolder: "+model.getApproval()+model.getActivity());
-                if (approvalStatus == false){
-                    viewHolder.cv.setBackgroundColor(Color.parseColor("#ff6f00"));
-                }else if(approvalStatus == true){
-                    viewHolder.cv.setBackgroundColor(Color.parseColor("#00c853"));
-                }
+
+
+                viewHolder.cv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle actBundle = new Bundle();
+                        actBundle.putString("activity",act);
+                        actBundle.putString("actPoints",actpoints);
+                        actBundle.putString("date",actdate);
+                        actBundle.putString("adminComm",actadminComments);
+                        actBundle.putString("adminid",actadminId);
+                        actBundle.putString("approval",actapproval);
+                        Intent intent = new Intent(RecentUpdatesActivity.this,ActivityApprovalDetials.class);
+                        intent.putExtras(actBundle);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
             }
         };
         recentActivity.setAdapter(activityAdapter);

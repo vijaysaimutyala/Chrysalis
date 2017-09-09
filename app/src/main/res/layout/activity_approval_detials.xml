@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.studioemvs.chrysalis.ActivityApprovalDetials">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_activityDetails"
+        android:text="@string/activityDetails"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="#000000"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_tableActivityResubmit"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/update_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/activity" />
+
+                <TextView
+                    android:id="@+id/user_update_rslt_activity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Built POC"
+                    android:textSize="15sp"
+                    android:textColor="@color/primary_text_material_light"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/update_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/actPoints" />
+
+                <TextView
+                    android:id="@+id/user_update_rslt_points"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Vijay Sai"
+                    android:textSize="15sp"
+                    android:textColor="@color/primary_text_material_light"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/user_update_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_date_rslt_points"
+                    android:text="01/01/1100"
+                    android:textColor="@color/primary_text_material_light"
+                    android:textColorHint="@color/hinttext"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/user_approvalStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/approvalStatus" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_rslt_approvalStatus"
+                    android:textColor="@color/primary_text_material_light"
+                    android:text="**********"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/user_adminid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/adminId" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_rslt_adminId"
+                    android:textColor="@color/primary_text_material_light"
+                    android:text="**********"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/user_adminComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/adminComments" />
+
+                <TextView
+                    android:id="@+id/user_rslt_adminCommetns"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Comments"
+                    android:textColor="@color/primary_text_material_light"
+                    android:maxLines="5"
+                    android:ellipsize="none"
+                    android:layout_weight="1"
+                    android:inputType="textMultiLine"/>
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rejectionText"
+            android:text="@string/rejecttext"
+            android:textColor="@color/primary_text_material_light"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignEnd="@+id/user_tableActivityResubmit" />
+</RelativeLayout>

@@ -2,38 +2,48 @@ package com.studioemvs.chrysalis;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.android.gms.nearby.connection.Strategy;
-import com.google.android.gms.vision.text.Text;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,21 +52,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.hanks.htextview.line.LineTextView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.studioemvs.chrysalis.models.User;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
-import static com.studioemvs.chrysalis.R.drawable.elon;
 
 
 public class UserProfileFragment extends Fragment implements View.OnClickListener{
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
+    Uri defaultImage,profileImageUri;
     String TAG ="User Profile Fragment";
     String userKey,username,chrysLevel,chrysGroup,chrysPoints,chrysSublevel,chrysalisPointsToBeApproved;
     Query userDataQuery,activityQuery,newsQuery;
@@ -64,14 +78,24 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     ProgressDialog progressDialog;
     Button recentActivity,adminDashboard;
     TextView name,level,points,group,sublevel,pointsToGetApproval,infoForUser;
+    RelativeLayout userProfileView;
     Boolean adminState;
     String sublevels []= {"1.1", "1.2","1.3","2.1","2.2","2.3","3.1","3.2","3.3"};
     int reqPointsForJump [] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
     RecyclerView userNews;
-    SharedPreferences imagePref;
+    SharedPreferences sharedPreferences;
     FirebaseRecyclerAdapter<NewsForUser,UserProfileFragment.NewsHolder> toApproveAdapter;
-    private static final int SELECT_PICTURE = 100;
-    String mImageUri;
+    private static final int PICK_IMAGE_REQUEST = 234;
+    String mImageUri = "ImageUri";
+    //a Uri object to store file path
+    private Uri filePath;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    StorageReference profilepicRef;
+    String[] perms = {"android.permission.READ_EXTERNAL_STORAGE"};
+    private static final int PERMISSION_REQUEST_CODE = 200;
+
+
 
     public UserProfileFragment() {
         // Required empty public constructor
@@ -85,38 +109,150 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Uri defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/drawable/elon");
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        mImageUri = preferences.getString("profilepicUri", defaultImage.toString());
+        defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/drawable/monarch1");
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        if(sharedPreferences.getString(mImageUri,null)!=null){
+            Uri uri = Uri.parse(sharedPreferences.getString(mImageUri,null));
+            profileImageUri = uri;
+        }else {
+            profileImageUri = defaultImage;
+        }
     }
     /* Choose an image from Gallery */
     void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @SuppressLint("NewApi")
+    public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
+        String selection = null;
+        String[] selectionArgs = null;
+        // Uri is different in versions after KITKAT (Android 4.4), we need to
+        if (Build.VERSION.SDK_INT >= 19 && DocumentsContract.isDocumentUri(context.getApplicationContext(), uri)) {
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                return Environment.getExternalStorageDirectory() + "/" + split[1];
+            } else if (isDownloadsDocument(uri)) {
+                final String id = DocumentsContract.getDocumentId(uri);
+                uri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+            } else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("image".equals(type)) {
+                    uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+                selection = "_id=?";
+                selectionArgs = new String[]{
+                        split[1]
+                };
+            }
+        }
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {
+                    MediaStore.Images.Media.DATA
+            };
+            Cursor cursor = null;
+            try {
+                cursor = context.getContentResolver()
+                        .query(uri, projection, selection, selectionArgs, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Get the path from the Uri
-                    String path = getPathFromURI(selectedImageUri);
-                    Log.i(TAG, "Image Path : " + path);
-                    // Set the image in ImageView
-                    // Saves image URI as string to Default Shared Preferences
-                    SharedPreferences preferences =
-                            PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("image", String.valueOf(selectedImageUri));
-                    editor.commit();
-                    profilePic.setImageURI(selectedImageUri);
-                }
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(mImageUri,getFilePath(this.getActivity(),filePath));
+                editor.commit();
+               // uploadFile();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                profilePic.setImageBitmap(bitmap);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
+        }
+    }
+    //this method will upload the file
+    private void uploadFile() {
+
+        //if there is a file to upload
+        if (filePath != null) {
+            //displaying a progress dialog while upload is going on
+            final ProgressDialog progressDialog = new ProgressDialog(this.getActivity());
+            progressDialog.setTitle("Uploading");
+            progressDialog.show();
+            profilepicRef.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            //if the upload is successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+                            //and displaying a success toast
+                            Toast.makeText(getActivity().getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            //if the upload is not successfull
+                            //hiding the progress dialog
+                            progressDialog.dismiss();
+
+                            //and displaying error message
+                            Toast.makeText(getActivity().getApplicationContext(), exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            //calculating progress percentage
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+
+                            //displaying percentage in progress dialog
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        }
+        //if there is not any file
+        else {
+            //you can display an error toast
         }
     }
 
@@ -138,7 +274,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
+        userProfileView = (RelativeLayout)rootView.findViewById(R.id.userProfileRelview);
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        profilepicRef = storageReference.child("images/"+userKey+"/profilepic.jpg");
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
         mAuth = FirebaseAuth.getInstance();
@@ -168,11 +307,24 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         Bitmap blurred = blurRenderScript(bitmap,7);
         imageView.setImageBitmap(blurred);
 
-        profilePic.setImageURI(Uri.parse(mImageUri));
-
+        if (profileImageUri !=null){
+            profilePic.setImageURI(profileImageUri);
+        }else {
+            profilePic.setImageURI(defaultImage);
+        }
         checkAuthorization();
+       // setProfilePic();
         return rootView;
     }
+
+    private void setProfilePic() {
+        Glide.with(this.getActivity())
+                .using(new FirebaseImageLoader())
+                .load(profilepicRef)
+                .into(profilePic);
+    }
+
+
     private void checkAuthorization() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -180,13 +332,13 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Toast.makeText(getContext(), "User" +user.getEmail()+"is logged in!", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "onAuthStateChanged: "+user.getUid());
                     userKey = user.getUid();
                     Log.d(TAG, "onAuthStateChanged: "+userKey+"uid: "+user.getUid());
                     progressDialog.setMessage("Fetching user data");
                     progressDialog.show();
                     getUserData(userKey);//settingtextView
+                    //setProfilePic();
                     progressDialog.hide();
                     //getNews();
 
@@ -208,7 +360,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 Log.d(TAG, "userprofile fragments: "+userProfile);
                 adminState = userProfile.getAdmin();
                 username = userProfile.getUsername();
-
                 chrysLevel = userProfile.getChrysalisLevel();
                // chrysSublevel = userProfile.getChrysalisSublevel();
                 chrysGroup = userProfile.getChrysalisGroup();
@@ -225,11 +376,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
              //   sublevel.setText(chrysSublevel);
                 pointsToGetApproval.setText(chrysalisPointsToBeApproved);
                 adminButtonVisibility(adminState);
-
             }
-
-
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG, "onCancelled: "+databaseError);
@@ -321,9 +468,64 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 startActivity(adminIntent);
                 break;
             case R.id.profile_image:
-                openImageChooser();
+                if (checkPermission()){
+                    openImageChooser();
+                }else {
+                    requestPermission();
+                    openImageChooser();
+                }
                 break;
         }
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), READ_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0) {
+                    boolean storageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (storageAccepted)
+                        Snackbar.make(userProfileView, "Permission Granted, Now you can change your profile pic", Snackbar.LENGTH_LONG).show();
+                    else {
+
+                        Snackbar.make(userProfileView, "Permission Denied, You cannot access storage to change your profile pic.", Snackbar.LENGTH_LONG).show();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            if (shouldShowRequestPermissionRationale(ACCESS_FINE_LOCATION)) {
+                                showMessageOKCancel("You need to allow access the storage permission to change your profile pic",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                    requestPermissions(new String[]{READ_EXTERNAL_STORAGE},
+                                                            PERMISSION_REQUEST_CODE);
+                                                }
+                                            }
+                                        });
+                                return;
+                            }
+                        }
+
+                    }
+                }
+                break;
+        }
+    }
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(this.getActivity())
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
     }
 
     public class NewsHolder extends RecyclerView.ViewHolder{
@@ -352,6 +554,5 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
             }
         };
         userNews.setAdapter(toApproveAdapter);
-
     }
 }

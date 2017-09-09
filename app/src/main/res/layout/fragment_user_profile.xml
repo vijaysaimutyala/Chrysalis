@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/userProfileRelview"
     tools:context="com.studioemvs.chrysalis.UserProfileFragment">
     <ImageView
     android:layout_width="match_parent"
@@ -32,7 +33,7 @@
         android:layout_height="wrap_content"
         android:text="Vijay Sai Mutyala"
         android:textSize="20sp"
-        android:layout_below="@+id/profile_image"
+        android:layout_below="@id/profile_image"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
         android:textColor="@android:color/white"
@@ -146,21 +147,34 @@
         android:layout_marginTop="5dp"
         android:paddingRight="10dp"
         android:textColor="@android:color/black"
-        android:text="You are 500 points away from becoming a Chrysalis coordinator"
+        android:text="You are 500 actPoints away from becoming a Chrysalis coordinator"
         android:textSize="16sp"
         android:background="#ffffff"
         android:maxLines = "1"
         android:scrollbars = "vertical"/>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_signupLogin"
+        android:layout_below="@id/relYetToApprove"
+        android:orientation="vertical">
 <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/relYetToApprove"
+    android:layout_margin="10dp"
     android:id="@+id/recActivityBtn"
-    android:text="@string/recentActivity" />
+    android:text="@string/recentActivity"
+    android:background="@color/colorPrimaryDark"
+    android:textColor="@android:color/white"
+    android:textSize="15sp"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:id="@+id/adminDashborad"
         android:text="@string/adminPage"
-        android:layout_below="@id/recActivityBtn"/>
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"/>
+    </LinearLayout>
 </RelativeLayout>
