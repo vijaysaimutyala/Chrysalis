@@ -16,8 +16,16 @@
     <string name="updateActivity">Update Activity</string>
     <string name="redeem">Redeem Points</string>
     <string name="submit">Submit</string>
+    <string-array name="activityType">
+        <item>Choose activity Type</item>
+        <item>Meeting</item>
+        <item>Training Session</item>
+        <item>POC</item>
+        <item>Real Life Deployement</item>
+    </string-array>
     <string-array name="interestGroups">
         <item>AI &amp; ML</item>
+        <item>Data Science</item>
         <item>Mobility</item>
         <item>IOT</item>
         <item>Robotics</item>
@@ -78,7 +86,6 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="date">Date</string>
     <string name="dateOfActivity">Date Of Activity</string>

@@ -29,18 +29,25 @@
             android:textColorHint="@color/hinttext"
             android:hint="@string/activityName"
             android:layout_marginTop="10dp"
-            android:maxLines="1"
-            />
+            android:maxLines="1"/>
+        <android.support.v7.widget.AppCompatSpinner
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/activityType"
+            android:entries="@array/activityType"
+            android:textColorHint="@color/hinttext"
+            android:layout_marginTop="10dp" />
+
         <EditText
+            android:id="@+id/activityPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/activityPoints"
-            android:hint="@string/activityPnts"
-            android:inputType="number"
-            android:textColorHint="@color/hinttext"
             android:layout_marginTop="10dp"
+            android:editable="false"
+            android:hint="@string/activityPnts"
+            android:inputType="none"
             android:maxLines="1"
-            />
+            android:textColorHint="@color/hinttext" />
         <android.support.v7.widget.AppCompatSpinner
             android:layout_width="match_parent"
             android:layout_height="40dp"

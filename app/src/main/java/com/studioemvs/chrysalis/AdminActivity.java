@@ -41,7 +41,8 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_admin);
 
         getSupportActionBar().setTitle("Admin Portal");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mainRef = FirebaseDatabase.getInstance().getReference();
         recentActivityRef = mainRef.child("recentActivity");
         userRef = mainRef.child("users");
@@ -110,6 +111,10 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
+            case android.R.id.home:
+                finish();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -121,12 +126,10 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
             case R.id.approveRegistration:
                 Intent intentReg = new Intent(AdminActivity.this,NewRegistrationsListActivity.class);
                 startActivity(intentReg);
-                finish();
                 break;
             case R.id.approveActivities:
                 Intent intent = new Intent(AdminActivity.this,UserActivitesApprovalListActivity.class);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.editUpdateActivities:
                 Intent addActIntent = new Intent(AdminActivity.this,AdminEditAddUpdateActivity.class);
@@ -134,7 +137,6 @@ public class AdminActivity extends AppCompatActivity implements View.OnClickList
                 adminbundle.putString("adminkey",userKey);
                 addActIntent.putExtras(adminbundle);
                 startActivity(addActIntent);
-                finish();
                 break;
 
         }

@@ -2,6 +2,8 @@ package com.studioemvs.chrysalis;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -13,6 +15,8 @@ public class ActivityApprovalDetials extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_approval_detials);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         activity = (TextView)findViewById(R.id.user_update_rslt_activity);
         points= (TextView)findViewById(R.id.user_update_rslt_points);
         date= (TextView)findViewById(R.id.user_date_rslt_points);
@@ -27,6 +31,8 @@ public class ActivityApprovalDetials extends AppCompatActivity {
         adminComments.setText(actBundle.getString("adminComm"));
         adminId.setText(actBundle.getString("adminid"));
         approval = actBundle.getString("approval");
+
+        Log.d("activityapprovaldetails", "onCreate: "+approval);
         if (approval.equals("rejected")){
             status.setText("Rejected");
         }else if(approval.equals("yes")){
@@ -36,6 +42,16 @@ public class ActivityApprovalDetials extends AppCompatActivity {
             status.setText("Approval In Progress");
             rejectionText.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

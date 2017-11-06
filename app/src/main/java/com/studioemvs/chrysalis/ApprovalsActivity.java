@@ -3,6 +3,7 @@ package com.studioemvs.chrysalis;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,7 +38,8 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_approvals);
         getSupportActionBar().setTitle("Approvals");
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mAuth = FirebaseAuth.getInstance();
 
         empId = (TextView)findViewById(R.id.approve_rslt_empId);
@@ -114,7 +116,6 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
                 approveActivity.put("approval",true);
                 approveActivity.put("approvedBy",adminKey);
                 approveActivity.put("adminComments",adminCommentsText);
-
                 recentActivityRef.child(activityKey).updateChildren(approveActivity);
                 finish();
                 break;
@@ -138,5 +139,15 @@ public class ApprovalsActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -5,6 +5,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -26,7 +28,7 @@ import com.google.android.gms.nearby.messages.internal.Update;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
-public class UserAndStatusActivity extends AppCompatActivity {
+public class UserAndStatusActivity extends AppCompatActivity{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     CoordinatorLayout coordinatorLayout;
@@ -35,7 +37,6 @@ public class UserAndStatusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_and_status);
-//        getSupportActionBar().setTitle("Profile and Update Activity");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -46,6 +47,29 @@ public class UserAndStatusActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                switch (position){
+                    case 0:
+                        getSupportActionBar().setTitle("User Profile");
+                        break;
+                    case 1:
+                        getSupportActionBar().setTitle("Activity Update");
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.main_content);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -91,7 +115,7 @@ public class UserAndStatusActivity extends AppCompatActivity {
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter implements ActionBar.TabListener{
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -125,6 +149,21 @@ public class UserAndStatusActivity extends AppCompatActivity {
                     return "Status Update";
             }
             return null;
+        }
+
+        @Override
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
+
+        @Override
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+        }
+
+        @Override
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
         }
     }
 }

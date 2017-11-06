@@ -30,16 +30,20 @@
             android:hint="@string/activityName"
             android:layout_marginTop="10dp"
             android:maxLines="1"
-            />
+            android:inputType="none"
+            android:focusable="false"
+            android:enabled="false"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit_activityPoints"
             android:hint="@string/activityPnts"
-            android:inputType="number"
+            android:inputType="none"
             android:textColorHint="@color/hinttext"
             android:layout_marginTop="10dp"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:focusable="false"
+            android:enabled="false"/>
         <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

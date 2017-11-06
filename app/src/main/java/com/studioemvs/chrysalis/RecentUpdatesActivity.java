@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ public class RecentUpdatesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_updates);
         getSupportActionBar().setTitle("Recent Activity");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
         recentActivityRef = mainRef.child("recentActivity");
@@ -87,15 +90,26 @@ public class RecentUpdatesActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     private void getRecentActivity(final String userkey) {
         Toast.makeText(RecentUpdatesActivity.this, "Called recent activity", Toast.LENGTH_SHORT).show();
-        activityQuery = userRef.child(userkey).child("recentActivity").orderByChild("id");
+        activityQuery = userRef.child(userkey).child("recentActivity").orderByKey();
         activityAdapter =new FirebaseRecyclerAdapter<User.RecentActivity, RecentUpdatesActivity.ActivityHolder>
-                (User.RecentActivity.class, R.layout.activity_recent_dummy,RecentUpdatesActivity.ActivityHolder.class,activityQuery) {
+                (User.RecentActivity.class, R.layout.activity_recent_dummy,RecentUpdatesActivity.
+                        ActivityHolder.class,activityQuery) {
             @Override
             protected void populateViewHolder(RecentUpdatesActivity.ActivityHolder viewHolder,
-                                              final User.RecentActivity model, int position) {
+                                              final User.RecentActivity model, final int position) {
+                DatabaseReference activityRef =getRef(position);
                 actapproval = model.getApproval().toString();
                 act = model.getActivity().toString();
                 actpoints = String.valueOf(model.getPoints());
@@ -105,7 +119,7 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                 //actkey = model.getActivityKey().toString();
                 Log.d(TAG, "populateViewHolder: "+act+actapproval+actadminId+actadminComments);
                 if (actapproval.equals("no")){
-                    viewHolder.cv.setCardBackgroundColor(Color.parseColor("#ff6f00"));
+                    viewHolder.cv.setCardBackgroundColor(Color.parseColor("#ffff00"));
                 }else if(actapproval.equals("yes")){
                     viewHolder.cv.setCardBackgroundColor(Color.parseColor("#00c853"));
                 }else if (actapproval.equals("rejected")){
@@ -115,19 +129,17 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                 viewHolder.cv.setRadius(2);
                 viewHolder.points.setText(String.valueOf(model.getPoints()));
                 Log.d(TAG, "populateViewHolder: "+model.getApproval()+model.getActivity());
-
-
                 viewHolder.cv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Bundle actBundle = new Bundle();
-                        actBundle.putString("activity",act);
-                        actBundle.putString("actPoints",actpoints);
-                        actBundle.putString("date",actdate);
-                        actBundle.putString("adminComm",actadminComments);
-                        actBundle.putString("adminid",actadminId);
-                        actBundle.putString("approval",actapproval);
                         Intent intent = new Intent(RecentUpdatesActivity.this,ActivityApprovalDetials.class);
+                        Bundle actBundle = new Bundle();
+                        actBundle.putString("activity",model.getActivity().toString());
+                        actBundle.putString("actPoints", String.valueOf(model.getPoints()));
+                        actBundle.putString("date",model.getActivityDate().toString());
+                        actBundle.putString("adminComm",model.getAdminComments().toString());
+                        actBundle.putString("adminid",model.getApprovedBy().toString());
+                        actBundle.putString("approval",model.getApproval().toString());
                         intent.putExtras(actBundle);
                         startActivity(intent);
                         finish();
