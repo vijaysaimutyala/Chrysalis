@@ -74,7 +74,8 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     String TAG ="User Profile Fragment";
     String userKey,username,chrysLevel,chrysGroup,chrysPoints,chrysSublevel,chrysalisPointsToBeApproved;
     Query userDataQuery,activityQuery,newsQuery;
-    ImageView imageView,profilePic;
+//    ImageView imageView;
+    ImageView profilePic;
     ProgressDialog progressDialog;
     Button recentActivity,adminDashboard;
     TextView name,level,points,group,sublevel,pointsToGetApproval,infoForUser;
@@ -109,6 +110,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/drawable/monarch1");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         if(sharedPreferences.getString(mImageUri,null)!=null){
@@ -275,13 +277,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         userProfileView = (RelativeLayout)rootView.findViewById(R.id.userProfileRelview);
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-        profilepicRef = storageReference.child("images/"+userKey+"/profilepic.jpg");
+//        storage = FirebaseStorage.getInstance();
+//        storageReference = storage.getReference();
+//        profilepicRef = storageReference.child("images/"+userKey+"/profilepic.jpg");
         mainRef = FirebaseDatabase.getInstance().getReference();
         userRef = mainRef.child("users");
-        mAuth = FirebaseAuth.getInstance();
-        imageView = (ImageView)rootView.findViewById(R.id.background_image_view);
+//        imageView = (ImageView)rootView.findViewById(R.id.background_image_view);
         name = (TextView)rootView.findViewById(R.id.frag_profileName);
         level = (TextView)rootView.findViewById(R.id.frag_chrysLevel);
         points = (TextView)rootView.findViewById(R.id.frag_chrysPoints);
@@ -302,10 +303,10 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 //       infoForUser.setMovementMethod(new ScrollingMovementMethod());
 
 
-        BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        Bitmap blurred = blurRenderScript(bitmap,7);
-        imageView.setImageBitmap(blurred);
+//        BitmapDrawable drawable = (BitmapDrawable)imageView.getDrawable();
+//        Bitmap bitmap = drawable.getBitmap();
+//        Bitmap blurred = blurRenderScript(bitmap,7);
+//        imageView.setImageBitmap(blurred);
 
         if (profileImageUri !=null){
             profilePic.setImageURI(profileImageUri);
@@ -408,52 +409,52 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    @SuppressLint("NewApi")
-    private Bitmap blurRenderScript(Bitmap smallBitmap, int radius) {
-
-        try {
-            smallBitmap = RGB565toARGB888(smallBitmap);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        Bitmap bitmap = Bitmap.createBitmap(
-                smallBitmap.getWidth(), smallBitmap.getHeight(),
-                Bitmap.Config.ARGB_8888);
-
-        RenderScript renderScript = RenderScript.create(this.getContext());
-
-        Allocation blurInput = Allocation.createFromBitmap(renderScript, smallBitmap);
-        Allocation blurOutput = Allocation.createFromBitmap(renderScript, bitmap);
-
-        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(renderScript,
-                Element.U8_4(renderScript));
-        blur.setInput(blurInput);
-        blur.setRadius(radius); // radius must be 0 < r <= 25
-        blur.forEach(blurOutput);
-
-        blurOutput.copyTo(bitmap);
-        renderScript.destroy();
-
-        return bitmap;
-
-    }
-
-    private Bitmap RGB565toARGB888(Bitmap img) throws Exception {
-        int numPixels = img.getWidth() * img.getHeight();
-        int[] pixels = new int[numPixels];
-
-        //Get JPEG pixels.  Each int is the color values for one pixel.
-        img.getPixels(pixels, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
-
-        //Create a Bitmap of the appropriate format.
-        Bitmap result = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
-
-        //Set RGB pixels.
-        result.setPixels(pixels, 0, result.getWidth(), 0, 0, result.getWidth(), result.getHeight());
-        return result;
-    }
+//    @SuppressLint("NewApi")
+//    private Bitmap blurRenderScript(Bitmap smallBitmap, int radius) {
+//
+//        try {
+//            smallBitmap = RGB565toARGB888(smallBitmap);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//        Bitmap bitmap = Bitmap.createBitmap(
+//                smallBitmap.getWidth(), smallBitmap.getHeight(),
+//                Bitmap.Config.ARGB_8888);
+//
+//        RenderScript renderScript = RenderScript.create(this.getContext());
+//
+//        Allocation blurInput = Allocation.createFromBitmap(renderScript, smallBitmap);
+//        Allocation blurOutput = Allocation.createFromBitmap(renderScript, bitmap);
+//
+//        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(renderScript,
+//                Element.U8_4(renderScript));
+//        blur.setInput(blurInput);
+//        blur.setRadius(radius); // radius must be 0 < r <= 25
+//        blur.forEach(blurOutput);
+//
+//        blurOutput.copyTo(bitmap);
+//        renderScript.destroy();
+//
+//        return bitmap;
+//
+//    }
+//
+//    private Bitmap RGB565toARGB888(Bitmap img) throws Exception {
+//        int numPixels = img.getWidth() * img.getHeight();
+//        int[] pixels = new int[numPixels];
+//
+//        //Get JPEG pixels.  Each int is the color values for one pixel.
+//        img.getPixels(pixels, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
+//
+//        //Create a Bitmap of the appropriate format.
+//        Bitmap result = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
+//
+//        //Set RGB pixels.
+//        result.setPixels(pixels, 0, result.getWidth(), 0, 0, result.getWidth(), result.getHeight());
+//        return result;
+//    }
 
     @Override
     public void onClick(View view) {

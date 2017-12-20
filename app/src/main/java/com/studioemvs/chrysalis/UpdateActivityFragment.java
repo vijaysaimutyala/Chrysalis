@@ -50,7 +50,9 @@ public class UpdateActivityFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -67,7 +69,6 @@ public class UpdateActivityFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         activitiesRecycler.setHasFixedSize(true);
 
-        mAuth = FirebaseAuth.getInstance();
         checkAuthorization();
         return rootView;
     }
@@ -99,7 +100,7 @@ public class UpdateActivityFragment extends Fragment {
                 (ActivitiesBean.class,R.layout.activity_recent_dummy,UpdateActivityFragment.ActivitiesViewHolder.class,activityRef) {
             @Override
             protected void populateViewHolder(ActivitiesViewHolder viewHolder, final ActivitiesBean model, int position) {
-                Log.d(TAG, "populateViewHolder: "+model.getActivity());
+//                Log.d(TAG, "populateViewHolder: "+model.getActivity());
                 viewHolder.activity.setText(model.getActivity());
                 viewHolder.cv.setRadius(2);
                 viewHolder.points.setText(String.valueOf(model.getActPoints()));

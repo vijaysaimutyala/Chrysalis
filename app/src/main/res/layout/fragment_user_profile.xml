@@ -5,15 +5,16 @@
     android:layout_height="match_parent"
     android:id="@+id/userProfileRelview"
     tools:context="com.studioemvs.chrysalis.UserProfileFragment">
+
     <ImageView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:src="@drawable/aai"
-    android:id="@+id/background_image_view"
-    android:adjustViewBounds="true"
-    android:scaleType="centerCrop"
+        android:id="@+id/background_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/aai" />
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -22,7 +23,7 @@
         android:foregroundGravity="center_horizontal"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/elon"
+        android:src="@mipmap/butterflyicon"
         app:civ_border_width="1dp"
         app:civ_border_color="#FFffffff"
         android:layout_alignParentTop="true"
@@ -32,7 +33,7 @@
         android:id="@+id/frag_profileName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vijay Sai Mutyala"
+        android:text="Your Name"
         android:textSize="20sp"
         android:layout_below="@id/profile_image"
         android:layout_centerHorizontal="true"
