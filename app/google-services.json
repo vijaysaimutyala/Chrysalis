@@ -1,58 +1,27 @@
 {
   "project_info": {
-    "project_number": "993988799255",
-    "firebase_url": "https://chrysalis-8c98c.firebaseio.com",
-    "project_id": "chrysalis-8c98c",
-    "storage_bucket": "chrysalis-8c98c.appspot.com"
+    "project_number": "169044415478",
+    "firebase_url": "https://chrysalis-b671b.firebaseio.com",
+    "project_id": "chrysalis-b671b",
+    "storage_bucket": "chrysalis-b671b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:993988799255:android:4e59ca0557e31709",
+        "mobilesdk_app_id": "1:169044415478:android:4e59ca0557e31709",
         "android_client_info": {
           "package_name": "com.studioemvs.chrysalis"
         }
       },
       "oauth_client": [
         {
-          "client_id": "993988799255-tvutrgjbp9nmtupv40m0i9jsm2j4gpf3.apps.googleusercontent.com",
+          "client_id": "169044415478-3334nrc5934k8jps07bmkcslvh26ij68.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAl9GbKg3QpF_9sF26qGWOrjDbKf-Y0p0U"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:993988799255:android:9121489d31274f3e",
-        "android_client_info": {
-          "package_name": "com.example.mutyalavijay_sai.helloworld"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "993988799255-tvutrgjbp9nmtupv40m0i9jsm2j4gpf3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAl9GbKg3QpF_9sF26qGWOrjDbKf-Y0p0U"
+          "current_key": "AIzaSyD5nSeG4_oyFhwl8mlOjWHimdTC7W2NmRY"
         }
       ],
       "services": {

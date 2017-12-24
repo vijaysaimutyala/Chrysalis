@@ -86,6 +86,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 userBundle.putString("uid",uid);
                                 intent.putExtras(userBundle);
                                 startActivity(intent);
+                                finish();
                             }else {
                                 Snackbar snackbar = Snackbar
                                         .make(relativeLayout, "Registration not yet confirmed by admin", Snackbar.LENGTH_LONG);
@@ -151,16 +152,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        FirebaseAuth.getInstance().signOut();
+//        finish();
+//    }
 
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.forgotPassword:
                 Intent forgotPwd = new Intent(LoginActivity.this, PasswordResetActivity.class);
                 startActivity(forgotPwd);
+//                finish();
                 break;
             case R.id.btn_signup:
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
                 startActivity(intent);
+//                finish();
                 break;
             case R.id.btn_Login:
                 signIn();

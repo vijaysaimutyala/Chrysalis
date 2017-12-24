@@ -1,6 +1,7 @@
 package com.studioemvs.chrysalis;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.nearby.messages.internal.Update;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,7 @@ public class UserAndStatusActivity extends AppCompatActivity{
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     CoordinatorLayout coordinatorLayout;
+    private Boolean exitBool = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +99,23 @@ public class UserAndStatusActivity extends AppCompatActivity{
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(exitBool){
+            FirebaseAuth.getInstance().signOut();
+//            finish();
+        }else{
+            Toast.makeText(this, "Press back again to signout", Toast.LENGTH_SHORT).show();
+            exitBool = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exitBool = false;
+                }
+            },3*1000);
         }
     }
 
@@ -167,4 +187,5 @@ public class UserAndStatusActivity extends AppCompatActivity{
 
         }
     }
+
 }

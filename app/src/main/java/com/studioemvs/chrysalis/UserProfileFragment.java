@@ -111,7 +111,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/drawable/monarch1");
+        defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/mipmap/ic_launcher");
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         if(sharedPreferences.getString(mImageUri,null)!=null){
             Uri uri = Uri.parse(sharedPreferences.getString(mImageUri,null));
