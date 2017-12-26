@@ -133,9 +133,10 @@ public class SignUpActivity extends AppCompatActivity {
         String chrysalisLevel = "Chrysalis Beginner";//
         String personalProjects = personalProject.getText().toString();
         Boolean admin = false;
+        Boolean instructor = false;
         Boolean regApproved = false;
         String chrysSubLevel = "1.1";
-        User newUser = new User(emailid,name,points, group,chrysalisLevel,personalProjects,admin,key,regApproved,pointsToBeApproved,employeeId);
+        User newUser = new User(emailid,name,points, group,chrysalisLevel,personalProjects,admin,instructor,key,regApproved,pointsToBeApproved,employeeId);
         Map<String,Object> addUser = newUser.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
 

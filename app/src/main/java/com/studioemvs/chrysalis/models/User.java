@@ -8,6 +8,7 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class User {
     public Boolean admin;
+    public Boolean instructor;
     public String chrysalisGroup;
     public String chrysalisLevel;
     public int chrysalisPoints;
@@ -125,7 +126,7 @@ public class User {
         }
     }
 
-    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String personalProjects, Boolean admin, String uid, Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
+    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String personalProjects, Boolean admin, Boolean instructor, String uid, Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
         this.emailid = emailid;
         this.username = username;
         this.chrysalisPoints = chrysalisPoints;
@@ -133,13 +134,14 @@ public class User {
         this.chrysalisLevel = chrysalisLevel;
         this.personalProjects = personalProjects;
         this.admin = admin;
+        this.instructor = instructor;
         this.uid = uid;
         this.registrationApproved = registrationApproved;
         this.chrysalisPointsToBeApproved = chrysalisPointsToBeApproved;
         this.empid = empid;
     }
 
-    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String personalProjects, Boolean admin, String uid, RecentActivity recentActivity, Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
+    public User(String emailid, String username, int chrysalisPoints, String chrysalisGroup, String chrysalisLevel, String personalProjects, Boolean admin,Boolean instructor, String uid, RecentActivity recentActivity, Boolean registrationApproved, int chrysalisPointsToBeApproved, int empid) {
         this.emailid = emailid;
         this.username = username;
         this.chrysalisPoints = chrysalisPoints;
@@ -147,6 +149,7 @@ public class User {
         this.chrysalisLevel = chrysalisLevel;
         this.personalProjects = personalProjects;
         this.admin = admin;
+        this.instructor = instructor;
         this.uid = uid;
         this.recentActivity = recentActivity;
         this.registrationApproved = registrationApproved;
@@ -155,6 +158,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public Boolean getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Boolean instructor) {
+        this.instructor = instructor;
     }
 
     public int getChrysalisPointsToBeApproved() {
@@ -215,6 +226,7 @@ public class User {
         result.put("chrysalisLevel", this.chrysalisLevel);
         result.put("personalProjects", this.personalProjects);
         result.put("admin", this.admin);
+        result.put("instructor",this.instructor);
         result.put("uid", this.uid);
         result.put("empid", Integer.valueOf(this.empid));
         result.put("registrationApproved", this.registrationApproved);

@@ -75,6 +75,7 @@
     <string name="toBeApproved">To be approved</string>
     <string name="viewProfile">View My Profile</string>
     <string name="adminPage">Me as Admin</string>
+    <string name="instructorPage">Me as Instructor</string>
     <string name="adminUser">Me as User</string>
     <string name="username">Username</string>
     <string name="activity">Activity</string>

@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     DatabaseReference mainRef,userRef;
-    Boolean adminState,registrationState;
+    Boolean adminState,registrationState,instructorState;
     String uid;
     VideoView videoBackground;
     RelativeLayout relativeLayout;
@@ -69,7 +69,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
                 globUser = firebaseAuth.getCurrentUser();
                 if (globUser != null) {
                     uid = globUser.getUid();
@@ -78,13 +77,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userData = dataSnapshot.getValue(User.class);
                             adminState =userData.getAdmin();
+                            instructorState =userData.getInstructor();
                             registrationState = userData.getRegistrationApproved();
                             if (registrationState){
                                 Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
                                 Bundle userBundle = new Bundle();
-                                userBundle.putBoolean("adminState",adminState);
                                 userBundle.putBoolean("registrationState",registrationState);
                                 userBundle.putString("uid",uid);
+                                if (adminState){
+                                    userBundle.putBoolean("adminState",adminState);
+                                }else if(instructorState){
+                                    userBundle.putBoolean("instructorState",instructorState);
+                                }
                                 intent.putExtras(userBundle);
                                 startActivity(intent);
                                 finish();

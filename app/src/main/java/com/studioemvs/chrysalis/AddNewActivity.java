@@ -26,7 +26,7 @@ import java.util.Map;
 public class AddNewActivity extends AppCompatActivity implements View.OnClickListener{
     String activity;
     int points;
-    String chrysalisGroup,adminid;
+    String chrysalisGroup,adminstructorid;
     Button submit;
     EditText activityPoints,chrysActivity,activityDate;
     Spinner chrysGroup,activityType;
@@ -44,7 +44,11 @@ public class AddNewActivity extends AppCompatActivity implements View.OnClickLis
         mainRef = FirebaseDatabase.getInstance().getReference();
         activityRef = mainRef.child("activites");
         Bundle data = getIntent().getExtras();
-        adminid = data.getString("adminKey");
+        if (data.getString("adminKey")!=null){
+            adminstructorid = data.getString("adminKey");
+        }else if(data.getString("instructorid")!=null){
+            adminstructorid = data.getString("instructorid");
+        }
         chrysActivity = (EditText)findViewById(R.id.activityName);
         chrysGroup = (Spinner)findViewById(R.id.chrysalisGroup);
         activityType = (Spinner)findViewById(R.id.activityType);
@@ -93,7 +97,7 @@ public class AddNewActivity extends AppCompatActivity implements View.OnClickLis
                 String group = chrysGroup.getSelectedItem().toString();
                 int points = Integer.parseInt(activityPoints.getText().toString());
                 String actdate = activityDate.getText().toString();
-                ActivitiesBean newActivity =   new ActivitiesBean(actname,points,group,adminid,actdate);
+                ActivitiesBean newActivity =   new ActivitiesBean(actname,points,group,adminstructorid,actdate);
                 Map<String,Object> addActivity = newActivity.toMap();
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put(key, addActivity);

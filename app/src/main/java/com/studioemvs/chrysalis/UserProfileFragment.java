@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.INTERNET;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
 
@@ -80,7 +81,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     Button recentActivity,adminDashboard;
     TextView name,level,points,group,sublevel,pointsToGetApproval,infoForUser;
     RelativeLayout userProfileView;
-    Boolean adminState;
+    Boolean adminState,instructorState;
     String sublevels []= {"1.1", "1.2","1.3","2.1","2.2","2.3","3.1","3.2","3.3"};
     int reqPointsForJump [] = {1000,1000,1000,1000,1000,1000,1000,1000,1000};
     RecyclerView userNews;
@@ -360,6 +361,7 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 User userProfile = dataSnapshot.getValue(User.class);
                 Log.d(TAG, "userprofile fragments: "+userProfile);
                 adminState = userProfile.getAdmin();
+                instructorState = userProfile.getInstructor();
                 username = userProfile.getUsername();
                 chrysLevel = userProfile.getChrysalisLevel();
                // chrysSublevel = userProfile.getChrysalisSublevel();
@@ -388,8 +390,12 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
 
     private void adminButtonVisibility(Boolean adminState) {
         if (adminState){
+            adminDashboard.setText(getResources().getString(R.string.adminPage));
             adminDashboard.setVisibility(View.VISIBLE);
-        }else{
+        }else if(instructorState){
+            adminDashboard.setText(getResources().getString(R.string.instructorPage));
+            adminDashboard.setVisibility(View.VISIBLE);
+        }else {
             adminDashboard.setVisibility(View.GONE);
         }
     }
@@ -466,7 +472,16 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.adminDashborad:
                 Intent adminIntent = new Intent(getContext(),AdminActivity.class);
-                startActivity(adminIntent);
+                Intent instructorIntent = new Intent(getContext(),AddNewActivity.class);
+                Bundle instructBundle = new Bundle();
+                Toast.makeText(getActivity(), " "+userKey, Toast.LENGTH_SHORT).show();
+                instructBundle.putString("instructorid",userKey);
+                instructorIntent.putExtras(instructBundle);
+                if (adminState) {
+                    startActivity(adminIntent);
+                }else if(instructorState){
+                    startActivity(instructorIntent);
+                }
                 break;
             case R.id.profile_image:
                 if (checkPermission()){
