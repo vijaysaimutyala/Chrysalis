@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String uid;
     VideoView videoBackground;
     RelativeLayout relativeLayout;
+    FirebaseUser globUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +70,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    uid = user.getUid();
+                globUser = firebaseAuth.getCurrentUser();
+                if (globUser != null) {
+                    uid = globUser.getUid();
                     userRef.child(uid).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -120,6 +121,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void signIn() {
         progressDialog.setMessage("Signing in");
         progressDialog.show();
+        if (globUser != null) {
+            uid = globUser.getUid();
+            userRef.child(uid).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User userData = dataSnapshot.getValue(User.class);
+                    adminState = userData.getAdmin();
+                    registrationState = userData.getRegistrationApproved();
+                    if (registrationState) {
+                        Intent intent = new Intent(LoginActivity.this, UserAndStatusActivity.class);
+                        Bundle userBundle = new Bundle();
+                        userBundle.putBoolean("adminState", adminState);
+                        userBundle.putBoolean("registrationState", registrationState);
+                        userBundle.putString("uid", uid);
+                        intent.putExtras(userBundle);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Snackbar snackbar = Snackbar
+                                .make(relativeLayout, "Registration not yet confirmed by admin", Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
         mAuth.signInWithEmailAndPassword(email.getText().toString(), pwd.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -131,13 +162,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed."+task.getException(),
+                            Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
 
+    }
     @Override
     public void onStart() {
         super.onStart();

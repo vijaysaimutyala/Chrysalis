@@ -94,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+
     private void signUpOnFirebase() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Signing Up");
