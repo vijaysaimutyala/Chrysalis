@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:textSize="20sp"
-        android:textColor="#000000"/>
+        android:textColor="#000000" />
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,8 @@
                     android:layout_weight="1"
                     android:text="Built POC"
                     android:textSize="15sp"
-                    android:textColor="@color/primary_text_material_light"/>
+                    android:textColor="@color/primary_text_material_light"
+                    android:textStyle="bold"/>
             </TableRow>
             <TableRow
                 android:layout_marginTop="10dp">
@@ -54,9 +55,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Vijay Sai"
+                    android:text="Name"
                     android:textSize="15sp"
-                    android:textColor="@color/primary_text_material_light"/>
+                    android:textColor="@color/primary_text_material_light"
+                    android:textStyle="bold"/>
             </TableRow>
             <TableRow
                 android:layout_marginTop="10dp">
@@ -71,7 +73,8 @@
                     android:id="@+id/user_date_rslt_points"
                     android:text="01/01/1100"
                     android:textColor="@color/primary_text_material_light"
-                    android:textColorHint="@color/hinttext"/>
+                    android:textColorHint="@color/hinttext"
+                    android:textStyle="bold"/>
             </TableRow>
             <TableRow
                 android:layout_marginTop="10dp">
@@ -85,7 +88,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/user_rslt_approvalStatus"
                     android:textColor="@color/primary_text_material_light"
-                    android:text="**********"/>
+                    android:text="**********"
+                    android:textStyle="bold"/>
             </TableRow>
             <TableRow
                 android:layout_marginTop="10dp">
@@ -99,7 +103,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/user_rslt_adminId"
                     android:textColor="@color/primary_text_material_light"
-                    android:text="**********"/>
+                    android:text="**********"
+                    android:textStyle="bold"/>
             </TableRow>
             <TableRow
                 android:layout_marginTop="10dp">
@@ -118,7 +123,8 @@
                     android:maxLines="5"
                     android:ellipsize="none"
                     android:layout_weight="1"
-                    android:inputType="textMultiLine"/>
+                    android:inputType="textMultiLine"
+                    android:textStyle="bold"/>
             </TableRow>
         </TableLayout>
 

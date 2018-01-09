@@ -1,5 +1,6 @@
 package com.studioemvs.chrysalis;
 
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,10 +41,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     DatabaseReference mainRef,userRef;
     Boolean adminState,registrationState,instructorState;
     String uid;
-    VideoView videoBackground;
     RelativeLayout relativeLayout;
     FirebaseUser globUser;
-
+    private Boolean exitBool = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -111,17 +111,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         };
     }
-
-    private void roleBasedCheck(Boolean admin,String uid) {
-        if (admin){
-            Intent intent = new Intent(LoginActivity.this,AdminActivity.class);
-            startActivity(intent);
-        }else {
-            Intent intent = new Intent(LoginActivity.this,UserAndStatusActivity.class);
-            startActivity(intent);
-        }
-    }
-
     private void signIn() {
         progressDialog.setMessage("Signing in");
         progressDialog.show();
@@ -189,8 +178,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 //    @Override
 //    public void onBackPressed() {
-//        FirebaseAuth.getInstance().signOut();
-//        finish();
+//        if(exitBool){
+////            FirebaseAuth.getInstance().signOut();
+//            finish();
+//        }else{
+//            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+//            exitBool = true;
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    exitBool = false;
+//                }
+//            },3*1000);
+//        }
 //    }
 
     public void onClick(View view) {
@@ -198,12 +198,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.forgotPassword:
                 Intent forgotPwd = new Intent(LoginActivity.this, PasswordResetActivity.class);
                 startActivity(forgotPwd);
-//                finish();
                 break;
             case R.id.btn_signup:
                 Intent intent = new Intent(LoginActivity.this,SignUpActivity.class);
                 startActivity(intent);
-//                finish();
                 break;
             case R.id.btn_Login:
                 signIn();

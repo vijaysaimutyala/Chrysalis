@@ -105,10 +105,10 @@ public class UserAndStatusActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         if(exitBool){
-            FirebaseAuth.getInstance().signOut();
-//            finish();
+//            FirebaseAuth.getInstance().signOut();
+            finish();
         }else{
-            Toast.makeText(this, "Press back again to signout", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT).show();
             exitBool = true;
             new Handler().postDelayed(new Runnable() {
                 @Override
