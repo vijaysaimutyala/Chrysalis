@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -55,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Toast.makeText(SignUpActivity.this, "User" +user.getUid()+"is logged in!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(SignUpActivity.this, "User" +user.getUid()+"is logged in!", Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -77,48 +78,75 @@ public class SignUpActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUpOnFirebase();
-            }
-/*                if (pwd.length()<8){
-                    Toast.makeText(SignUpActivity.this, "Password must be of minimum 8 characters.", Toast.LENGTH_SHORT).show();
-                }else {
-                    if (pwd.getText().toString().equals(cnfpwd.getText().toString())){
-                        signUpOnFirebase();
-                    }else{
-                        Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+                if(verifyEmail()){
+                    if(verifyPwd()){
+                            signUpOnFirebase();
+                        }
+                    else {
+                        Toast.makeText(SignUpActivity.this, "Choose a password of length 8 and confirm both the passwords match", Toast.LENGTH_SHORT).show();
                     }
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Please enter a valid address on @infosys.com domain.", Toast.LENGTH_SHORT).show();
                 }
-            }*/
+
+            }
         });
 
 
     }
 
+    private boolean verifyPwd() {
+        String loc_pwd = pwd.getText().toString();
+        String loc_cnfpwd = cnfpwd.getText().toString();
+        if (loc_pwd.length()<8 && loc_cnfpwd != loc_pwd){
+            return false;
+        }
+        else {return true;}
+    }
+
+
+    private boolean verifyEmail() {
+        final String loc_email = email.getText().toString().trim();
+        final String emailPattern = "[a-zA-Z0-9._-]+@infosys.com$";
+        String loc_pwd = pwd.getText().toString();
+        if (!TextUtils.isEmpty(loc_email) && loc_email.matches(emailPattern)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     private void signUpOnFirebase() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Signing Up");
-        progressDialog.show();
-        mAuth.createUserWithEmailAndPassword(email.getText().toString(), cnfpwd.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+        if(!username.getText().toString().trim().isEmpty() && !empId.getText().toString().trim().isEmpty()){
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Signing Up");
+            progressDialog.show();
+            mAuth.createUserWithEmailAndPassword(email.getText().toString(), cnfpwd.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(SignUpActivity.this, "Authentication failed." +task.getException(),
-                                    Toast.LENGTH_SHORT).show();
-                        }else {
-                            String emailid = email.getText().toString();
-                            String uid = mAuth.getCurrentUser().getUid().toString();
-                            saveUserDataToFirebase(emailid,uid);
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(SignUpActivity.this, "Authentication failed." +task.getException(),
+                                        Toast.LENGTH_SHORT).show();
+                            }else {
+                                String emailid = email.getText().toString();
+                                String uid = mAuth.getCurrentUser().getUid().toString();
+                                saveUserDataToFirebase(emailid,uid);
+                            }
+                            progressDialog.hide();
                         }
-                        progressDialog.hide();
-                    }
-                });
+                    });
+        }else{
+            Toast.makeText(this, "Please verify username and employee id.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void saveUserDataToFirebase(String emailid, String uid) {

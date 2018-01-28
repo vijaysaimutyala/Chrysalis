@@ -138,9 +138,16 @@ public class UpdateActivityFragment extends Fragment {
         });
         activitiesRecycler.setLayoutManager(linearLayoutManager);
         activitiesRecycler.setAdapter(activityAdapter);
-        progressDialog.hide();
+        progressDialog.dismiss();
 
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
+    }
+
     public static class ActivitiesViewHolder extends RecyclerView.ViewHolder{
         TextView activity;
         TextView points;

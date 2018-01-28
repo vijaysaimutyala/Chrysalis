@@ -8,7 +8,11 @@ import android.os.Bundle;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,7 +50,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Boolean exitBool = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mainRef = FirebaseDatabase.getInstance().getReference();
@@ -62,6 +65,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPwd.setOnClickListener(this);
         login.setOnClickListener(this);
         signup.setOnClickListener(this);
+        Log.d(TAG, "email id: "+email.getId());
+        Log.d(TAG, "paswrd : "+pwd.getId());
+        Log.d(TAG, "sign in:"+login.getId());
         checkAuthorzation();
     }
 
@@ -112,8 +118,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         };
     }
     private void signIn() {
-        progressDialog.setMessage("Signing in");
-        progressDialog.show();
         if (globUser != null) {
             uid = globUser.getUid();
             userRef.child(uid).addValueEventListener(new ValueEventListener() {
@@ -144,22 +148,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
         }
-        mAuth.signInWithEmailAndPassword(email.getText().toString(), pwd.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                        progressDialog.hide();
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
+        final String loc_email = email.getText().toString().trim();
+        final String emailPattern = "[a-zA-Z0-9._-]+@infosys.com$";
+        String loc_pwd = pwd.getText().toString();
+        if(!TextUtils.isEmpty(loc_email) && loc_email.matches(emailPattern) && !TextUtils.isEmpty(loc_pwd)){
+            progressDialog.setMessage("Signing in");
+            progressDialog.show();
+            mAuth.signInWithEmailAndPassword(email.getText().toString(), pwd.getText().toString())
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                            progressDialog.hide();
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithEmail", task.getException());
+                                Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }else {
+            Toast.makeText(this, "The email id or password entered is not valid.", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
     @Override

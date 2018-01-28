@@ -38,7 +38,7 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
         mAuth = FirebaseAuth.getInstance();
         switch (view.getId()){
             case R.id.submit:
-                if (email != null){
+                if (verifyEmail()){
                 mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -52,9 +52,18 @@ public class PasswordResetActivity extends AppCompatActivity implements View.OnC
                 });
 
             }else{
-                    Toast.makeText(this, "Please enter your registered email.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Please enter a valid email id.", Toast.LENGTH_SHORT).show();
                 }
                 break;
+        }
+    }
+    private boolean verifyEmail() {
+        final String loc_email = regEmail.getText().toString().trim();
+        final String emailPattern = "[a-zA-Z0-9._-]+@infosys.com$";
+        if (!TextUtils.isEmpty(loc_email) && loc_email.matches(emailPattern)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

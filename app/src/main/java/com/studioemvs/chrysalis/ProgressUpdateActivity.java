@@ -124,7 +124,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
                     submitActivityToAdmin(pointsForActivity,activityCompleted,approval,dateCompleted,userComments);
                     updateActInMain(pointsForActivity, activityCompleted,approval,dateCompleted,userComments,keyUnderUserRecentNode);
                     updateToBeApprovedPoints(pointsForActivity,prevPointsToApprove);
-                    Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
+                   //Toast.makeText(ProgressUpdateActivity.this, "user key "+userKey, Toast.LENGTH_SHORT).show();
                     finish();
                 }else {
                     Snackbar dateBar = Snackbar.make(relLayout,"Please enter the activity date",Snackbar.LENGTH_SHORT);
@@ -148,7 +148,7 @@ public class ProgressUpdateActivity extends AppCompatActivity implements View.On
             userRef.child(userKey).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Toast.makeText(ProgressUpdateActivity.this, "in onDatachange", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(ProgressUpdateActivity.this, "in onDatachange", Toast.LENGTH_SHORT).show();
                     User userdata = dataSnapshot.getValue(User.class);
                     empid = userdata.getEmpid();
                     prevPointsToApprove = userdata.getChrysalisPointsToBeApproved();

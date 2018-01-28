@@ -7,8 +7,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 public class ActivityApprovalDetials extends AppCompatActivity {
-    TextView activity,points,date,adminId,adminComments,rejectionText,status;
+    TextView activity,points,date,adminId,adminComments,rejectionText,status,user_act_comments;
     String approval;
 
     @Override
@@ -20,6 +22,7 @@ public class ActivityApprovalDetials extends AppCompatActivity {
         activity = (TextView)findViewById(R.id.user_update_rslt_activity);
         points= (TextView)findViewById(R.id.user_update_rslt_points);
         date= (TextView)findViewById(R.id.user_date_rslt_points);
+        user_act_comments = (TextView)findViewById(R.id.user_act_comments);
         adminId= (TextView)findViewById(R.id.user_rslt_adminId);
         adminComments= (TextView)findViewById(R.id.user_rslt_adminCommetns);
         rejectionText= (TextView)findViewById(R.id.rejectionText);
@@ -28,6 +31,7 @@ public class ActivityApprovalDetials extends AppCompatActivity {
         activity.setText(actBundle.getString("activity"));
         points.setText(actBundle.getString("actPoints"));
         date.setText(actBundle.getString("date"));
+        user_act_comments.setText(actBundle.getString("userComments"));
         adminComments.setText(actBundle.getString("adminComm"));
         adminId.setText(actBundle.getString("adminid"));
         approval = actBundle.getString("approval");

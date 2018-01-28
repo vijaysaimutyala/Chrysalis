@@ -112,14 +112,6 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/mipmap/ic_launcher");
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
-        if(sharedPreferences.getString(mImageUri,null)!=null){
-            Uri uri = Uri.parse(sharedPreferences.getString(mImageUri,null));
-            profileImageUri = uri;
-        }else {
-            profileImageUri = defaultImage;
-        }
     }
     /* Choose an image from Gallery */
     void openImageChooser() {
@@ -276,6 +268,14 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        defaultImage = Uri.parse("android.resource://com.studioemvs.chrysalis/"+R.mipmap.profile_pic);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        if(sharedPreferences.getString(mImageUri,null)!=null){
+            Uri uri = Uri.parse(sharedPreferences.getString(mImageUri,null));
+            profileImageUri = uri;
+        }else {
+            profileImageUri = defaultImage;
+        }
         View rootView = inflater.inflate(R.layout.fragment_user_profile, container, false);
         userProfileView = (RelativeLayout)rootView.findViewById(R.id.userProfileRelview);
 //        storage = FirebaseStorage.getInstance();
@@ -472,9 +472,9 @@ public class UserProfileFragment extends Fragment implements View.OnClickListene
                 break;
             case R.id.adminDashborad:
                 Intent adminIntent = new Intent(getContext(),AdminActivity.class);
-                Intent instructorIntent = new Intent(getContext(),AddNewActivity.class);
+                Intent instructorIntent = new Intent(getContext(),AdminEditAddUpdateActivity.class);
                 Bundle instructBundle = new Bundle();
-                Toast.makeText(getActivity(), " "+userKey, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), " "+userKey, Toast.LENGTH_SHORT).show();
                 instructBundle.putString("instructorid",userKey);
                 instructorIntent.putExtras(instructBundle);
                 if (adminState) {

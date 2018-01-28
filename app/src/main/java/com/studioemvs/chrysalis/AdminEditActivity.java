@@ -17,7 +17,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class AdminEditActivity extends AppCompatActivity implements View.OnClickListener{
     EditText actName, activityPoints;
@@ -26,6 +29,7 @@ public class AdminEditActivity extends AppCompatActivity implements View.OnClick
     FirebaseAuth mAuth;
     DatabaseReference mainRef,activityRef;
     AlertDialog.Builder alertDialog;
+    String [] defaultAct=new String[] {"1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,24 +66,29 @@ public class AdminEditActivity extends AppCompatActivity implements View.OnClick
                 Toast.makeText(this, "Sorry. Updating the activity is disabled for now. Check back after the next version is released.", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.deleteUpdateAct:
-                alertDialog.setMessage("Do you really want to delete the activity?")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                activityRef.child(actKey).removeValue();
-                                Toast.makeText(getApplicationContext(), "Activity deleted succesfully.", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
-                AlertDialog alert = alertDialog.create();
-                alert.show();
+                if (!Arrays.asList(defaultAct).contains(actKey)){
+                    alertDialog.setMessage("Do you really want to delete the activity?")
+                            .setCancelable(true)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    activityRef.child(actKey).removeValue();
+                                    Toast.makeText(getApplicationContext(), "Activity deleted succesfully.", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    AlertDialog alert = alertDialog.create();
+                    alert.show();
+                }else{
+                    Toast.makeText(this, "This is a default activity and can only be deleted by super admin.", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
 

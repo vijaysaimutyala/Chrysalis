@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.studioemvs.chrysalis.models.ActivitiesBean;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -32,6 +34,7 @@ public class AddNewActivity extends AppCompatActivity implements View.OnClickLis
     Spinner chrysGroup,activityType;
     Calendar myCalendar;
     DatabaseReference mainRef,activityRef;
+    String[] defaultActivityType = new String[]{"Meeting","Training Session","POC","Real Life Deployement"};
 
 
 
@@ -95,15 +98,35 @@ public class AddNewActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.submitAddAct:
                 String actname = chrysActivity.getText().toString();
                 String group = chrysGroup.getSelectedItem().toString();
+                String actType = activityType.getSelectedItem().toString();
+//                Toast.makeText(this, "Activity is "+actType, Toast.LENGTH_SHORT).show();
                 int points = Integer.parseInt(activityPoints.getText().toString());
                 String actdate = activityDate.getText().toString();
-                ActivitiesBean newActivity =   new ActivitiesBean(actname,points,group,adminstructorid,actdate);
-                Map<String,Object> addActivity = newActivity.toMap();
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put(key, addActivity);
-                activityRef.updateChildren(childUpdates);
-                Toast.makeText(this, "Activity Added successfully.", Toast.LENGTH_SHORT).show();
-                finish();
+                if(!TextUtils.isEmpty(actname.trim())) {
+                    if (Arrays.asList(defaultActivityType).contains(actType)) {
+                        if(!TextUtils.isEmpty(actdate)){
+                            ActivitiesBean newActivity = new ActivitiesBean(actname, points, group, adminstructorid, actdate);
+                            Map<String, Object> addActivity = newActivity.toMap();
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put(key, addActivity);
+                            activityRef.updateChildren(childUpdates);
+                            Toast.makeText(this, "Activity Added successfully.", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else {
+                            Toast.makeText(this, "Select and activity Date.", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                else {
+                    Toast.makeText(this, "Please select an activity type.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                    else{
+                    Toast.makeText(this, "Please provide an activity name !", Toast.LENGTH_SHORT).show();
+                }
+
+
+
                 break;
             case R.id.newActDate:
                 new DatePickerDialog(AddNewActivity.this, date, myCalendar

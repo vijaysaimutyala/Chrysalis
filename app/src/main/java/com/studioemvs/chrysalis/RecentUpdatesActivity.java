@@ -101,7 +101,7 @@ public class RecentUpdatesActivity extends AppCompatActivity {
     }
 
     private void getRecentActivity(final String userkey) {
-        Toast.makeText(RecentUpdatesActivity.this, "Called recent activity", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(RecentUpdatesActivity.this, "Called recent activity", Toast.LENGTH_SHORT).show();
         activityQuery = userRef.child(userkey).child("recentActivity").orderByKey();
         activityAdapter =new FirebaseRecyclerAdapter<User.RecentActivity, RecentUpdatesActivity.ActivityHolder>
                 (User.RecentActivity.class, R.layout.activity_recent_dummy,RecentUpdatesActivity.
@@ -140,9 +140,10 @@ public class RecentUpdatesActivity extends AppCompatActivity {
                         actBundle.putString("adminComm",model.getAdminComments().toString());
                         actBundle.putString("adminid",model.getApprovedBy().toString());
                         actBundle.putString("approval",model.getApproval().toString());
+                        actBundle.putString("userComments",model.getUserComments().toString());
                         intent.putExtras(actBundle);
                         startActivity(intent);
-                        finish();
+                        //finish();
                     }
                 });
             }

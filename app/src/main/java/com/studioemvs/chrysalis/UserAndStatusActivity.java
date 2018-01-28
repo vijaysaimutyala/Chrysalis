@@ -94,6 +94,7 @@ public class UserAndStatusActivity extends AppCompatActivity{
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.usersignout:
+                Toast.makeText(this, "Signing Out! Double tap back button to exit.", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;

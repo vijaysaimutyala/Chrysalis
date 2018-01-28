@@ -32,8 +32,7 @@ public class AdminEditAddUpdateActivity extends AppCompatActivity {
     DatabaseReference mainRef,userRef,activityRef;
     ProgressDialog progressDialog;
     Query activityListQuery;
-    String TAG = "AdminEdit activity"
-            ;
+    String TAG = "AdminEdit activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +128,14 @@ public class AdminEditAddUpdateActivity extends AppCompatActivity {
             }*/
         };
         activityList.setAdapter(activityListAdapter);
-        progressDialog.hide();
+        progressDialog.dismiss();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
     }
 
     @Override

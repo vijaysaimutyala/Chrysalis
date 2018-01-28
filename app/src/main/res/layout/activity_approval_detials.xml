@@ -79,6 +79,24 @@
             <TableRow
                 android:layout_marginTop="10dp">
                 <TextView
+                    android:id="@+id/user_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userComments" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_act_comments"
+                    android:text="None"
+                    android:textColor="@color/primary_text_material_light"
+                    android:textColorHint="@color/hinttext"
+                    android:inputType="textMultiLine"
+                    android:layout_weight="1"
+                    android:textStyle="bold"/>
+            </TableRow>
+            <TableRow
+                android:layout_marginTop="10dp">
+                <TextView
                     android:id="@+id/user_approvalStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -128,16 +146,14 @@
             </TableRow>
         </TableLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rejectionText"
-            android:text="@string/rejecttext"
-            android:textColor="@color/primary_text_material_light"
-            android:textSize="20sp"
-            android:textAlignment="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_alignEnd="@+id/user_tableActivityResubmit" />
+    <TextView
+        android:id="@+id/rejectionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/rejecttext"
+        android:textAlignment="center"
+        android:textColor="@color/primary_text_material_light"
+        android:textSize="20sp" />
 </RelativeLayout>
